@@ -2,129 +2,180 @@ import cv2
 import numpy as np
 import os
 
-# Załaduj zdjęcia z bazy danych
-def load_face_images_from_directory(directory):
+# Tworzenie folderów do przechowywania zdjęć i filmów
+faces_test_folder = "faces_to_test"
+os.makedirs(faces_test_folder, exist_ok=True)
+
+def get_all_mp4_files(directory):
+    return [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.mp4')]
+
+def load_faces_from_videos(video_paths):
     faces = []
     labels = []
+    label_map = {}
     label = 0
-    for filename in os.listdir(directory):
-        image_path = os.path.join(directory, filename)
-        if filename.endswith('.jpg') or filename.endswith('.png'):
-            image = cv2.imread(image_path)
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Konwersja do odcieni szarości
-            faces.append(gray)
-            labels.append(label)
-            label += 1
-    return faces, labels
+    
+    for video_path in video_paths:
+        cap = cv2.VideoCapture(video_path)
+        if not cap.isOpened():
+            print(f"Nie udało się otworzyć pliku wideo: {video_path}")
+            continue
 
-def preprocess_face(face):
-    # Resize the face region to a fixed size for consistent recognition
-    return cv2.resize(face, (200, 200))
+        print(f"Przetwarzanie wideo: {video_path}")
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-def load_faces_from_video(video_path):
-    faces = []
-    labels = []
-    label = 0
-    cap = cv2.VideoCapture(video_path)
-    if not cap.isOpened():
-        print(f"Nie udało się otworzyć pliku wideo: {video_path}")
-        return faces, labels
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+            detected_faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=8, minSize=(50, 50))
 
-    print(f"Przetwarzanie wideo: {video_path}")
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+            for (x, y, w, h) in detected_faces:
+                face_region = gray[y:y+h, x:x+w]
+                face_region = cv2.resize(face_region, (200, 200))
+                faces.append(face_region)
+                labels.append(label)
+                label_map[label] = os.path.basename(video_path)
+                label += 1
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        detected_faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=8, minSize=(50, 50))
+        cap.release()
+    
+    return faces, labels, label_map
 
-        for (x, y, w, h) in detected_faces:
-            face_region = gray[y:y+h, x:x+w]
-            face_region = preprocess_face(face_region)  # Preprocess the face
-            faces.append(face_region)
-            labels.append(label)
-            label += 1
-
-    cap.release()
-    return faces, labels
-
-def process_face_live(frame, recognizer):
+def process_face(frame, recognizer, label_map):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=8, minSize=(50, 50))
 
     for (x, y, w, h) in faces:
         face_region = gray[y:y+h, x:x+w]
-        face_region = preprocess_face(face_region)  # Preprocess the face
+        face_region = cv2.resize(face_region, (200, 200))
         label, confidence = recognizer.predict(face_region)
+        face_name = label_map.get(label, "Unknown")
 
-        if label == 0:
-            face_name = "Face1"
-        elif label == 1:
-            face_name = "Face2"
-        else:
-            face_name = "Unknown"
-
-        # Draw rectangle around the face
         cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        
-        # Add text with the name and confidence
         cv2.putText(frame, f"{face_name} ({100 - confidence:.2f}%)", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-        
-        # Draw crosshair lines on the face
-        cv2.line(frame, (x, y + h // 2), (x + w, y + h // 2), (0, 255, 255), 1)  # Horizontal line
-        cv2.line(frame, (x + w // 2, y), (x + w // 2, y + h), (0, 255, 255), 1)  # Vertical line
-        
-        # Add alert if confidence is low
-        if confidence > 50:  # Adjust threshold as needed
-            cv2.putText(frame, "Low Confidence!", (x, y + h + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        
-        # Draw a tag line pointing to the face
-        cv2.line(frame, (x + w, y), (x + w + 50, y - 30), (0, 255, 0), 2)
-        cv2.putText(frame, "Detected", (x + w + 55, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-
+    
     return frame
 
-def main():
-    # Ścieżka do pliku wideo z twarzami
-    database_video = 'faces_database/video.mp4'  # Podaj ścieżkę do pliku wideo z twarzami
-
-    # Załaduj twarze z wideo i trenuj rozpoznawanie twarzy
-    recognizer = cv2.face.LBPHFaceRecognizer_create()
-    faces, labels = load_faces_from_video(database_video)
-    if not faces:
-        print("Nie udało się załadować twarzy z wideo.")
+def recognize_from_camera(recognizer, label_map):
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Nie udało się otworzyć kamery.")
         return
-    recognizer.train(faces, np.array(labels))
+    
+    print("Naciśnij 'q', aby zakończyć.")
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        processed_frame = process_face(frame, recognizer, label_map)
+        cv2.imshow("Live Face Recognition", processed_frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
 
-    # Otwórz kamerę
+def recognize_from_video(video_path, recognizer, label_map):
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        print(f"Nie udało się otworzyć pliku wideo: {video_path}")
+        return
+    
+    print(f"Analiza pliku: {video_path}")
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        processed_frame = process_face(frame, recognizer, label_map)
+        cv2.imshow("Video Face Recognition", processed_frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+
+def take_photo():
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Nie udało się otworzyć kamery.")
         return
 
-    print("Naciśnij 'q', aby zakończyć.")
+    ret, frame = cap.read()
+    if ret:
+        photo_path = os.path.join(faces_test_folder, "photo.png")
+        cv2.imwrite(photo_path, frame)
+        print(f"Zdjęcie zapisane jako {photo_path}")
+    
+    cap.release()
+    cv2.destroyAllWindows()
+
+def record_video():
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Nie udało się otworzyć kamery.")
+        return
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    video_path = os.path.join(faces_test_folder, "recorded_video.mp4")
+    out = cv2.VideoWriter(video_path, fourcc, 20.0, (640, 480))
+
+    print("Nagrywanie... Naciśnij 'q', aby zakończyć.")
     while True:
         ret, frame = cap.read()
         if not ret:
-            print("Nie udało się odczytać klatki z kamery.")
             break
-
-        # Przetwórz klatkę w celu rozpoznania twarzy
-        processed_frame = process_face_live(frame, recognizer)
-
-        # Wyświetl przetworzoną klatkę
-        cv2.imshow("Live Face Recognition", processed_frame)
-
-        # Wyjdź po naciśnięciu 'q' lub zamknięciu okna
-        if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty("Live Face Recognition", cv2.WND_PROP_VISIBLE) < 1:
+        out.write(frame)
+        cv2.imshow("Recording", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
-    # Zwolnij zasoby
+    
     cap.release()
+    out.release()
     cv2.destroyAllWindows()
+    print(f"Nagranie zapisane jako {video_path}")
+
+def main():
+    directory = "faces_database"
+    mp4_files = get_all_mp4_files(directory)
+    if not mp4_files:
+        print("Brak plików .mp4 w podanym katalogu.")
+        return
+    
+    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    faces, labels, label_map = load_faces_from_videos(mp4_files)
+    if not faces:
+        print("Nie udało się załadować twarzy z wideo.")
+        return
+    recognizer.train(faces, np.array(labels))
+
+    while True:
+        print("\nWybierz opcję:")
+        print("1 - Analiza obrazu z kamery na żywo")
+        print("2 - Analiza obrazu z zapisanego filmu")
+        print("3 - Zrób zdjęcie i zapisz jako PNG")
+        print("4 - Nagraj film i zapisz jako MP4")
+        print("5 - Wyjście")
+        choice = input("Wybór: ")
+        
+        if choice == '1':
+            recognize_from_camera(recognizer, label_map)
+        elif choice == '2':
+            print("Podaj ścieżkę do pliku wideo:")
+            video_path = input("Ścieżka: ")
+            if not os.path.exists(video_path):
+                print("Nie znaleziono pliku.")
+            else:
+                recognize_from_video(video_path, recognizer, label_map)
+        elif choice == '3':
+            take_photo()
+        elif choice == '4':
+            record_video()
+        elif choice == '5':
+            break
+        else:
+            print("Niepoprawny wybór. Spróbuj ponownie.")
+    
     print("Program zakończony.")
 
 if __name__ == "__main__":
