@@ -17,6 +17,10 @@ def load_face_images_from_directory(directory):
             label += 1
     return faces, labels
 
+def preprocess_face(face):
+    # Resize the face region to a fixed size for consistent recognition
+    return cv2.resize(face, (200, 200))
+
 def load_faces_from_video(video_path):
     faces = []
     labels = []
@@ -34,10 +38,11 @@ def load_faces_from_video(video_path):
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        detected_faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        detected_faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=8, minSize=(50, 50))
 
         for (x, y, w, h) in detected_faces:
             face_region = gray[y:y+h, x:x+w]
+            face_region = preprocess_face(face_region)  # Preprocess the face
             faces.append(face_region)
             labels.append(label)
             label += 1
@@ -48,10 +53,11 @@ def load_faces_from_video(video_path):
 def process_face_live(frame, recognizer):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=8, minSize=(50, 50))
 
     for (x, y, w, h) in faces:
         face_region = gray[y:y+h, x:x+w]
+        face_region = preprocess_face(face_region)  # Preprocess the face
         label, confidence = recognizer.predict(face_region)
 
         if label == 0:
@@ -83,7 +89,7 @@ def process_face_live(frame, recognizer):
 
 def main():
     # Ścieżka do pliku wideo z twarzami
-    database_video = 'faces_database/video2.mp4'  # Podaj ścieżkę do pliku wideo z twarzami
+    database_video = 'faces_database/video.mp4'  # Podaj ścieżkę do pliku wideo z twarzami
 
     # Załaduj twarze z wideo i trenuj rozpoznawanie twarzy
     recognizer = cv2.face.LBPHFaceRecognizer_create()
