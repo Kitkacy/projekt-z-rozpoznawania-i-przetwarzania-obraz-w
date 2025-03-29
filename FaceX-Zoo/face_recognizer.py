@@ -42,7 +42,7 @@ def process_face(image, database_faces):
     else:
         face_name = "Face3"
     
-    print(f"Face recognized as {face_name} with confidence {confidence:.2f}")
+    print(f"Face recognized as {face_name} with confidence {100 - confidence:.2f}")
     
     return image
 
