@@ -83,7 +83,7 @@ def process_face_live(frame, recognizer):
 
 def main():
     # Ścieżka do pliku wideo z twarzami
-    database_video = 'faces_database/video.mp4'  # Podaj ścieżkę do pliku wideo z twarzami
+    database_video = 'faces_database/video2.mp4'  # Podaj ścieżkę do pliku wideo z twarzami
 
     # Załaduj twarze z wideo i trenuj rozpoznawanie twarzy
     recognizer = cv2.face.LBPHFaceRecognizer_create()
