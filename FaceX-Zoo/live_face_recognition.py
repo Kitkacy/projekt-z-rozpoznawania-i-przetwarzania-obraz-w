@@ -1,19 +1,15 @@
 import sys
-import os
-# Add the FaceX-Zoo directory to the Python path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 import cv2
 import yaml
 import logging.config
 import numpy as np
-from core.model_loader.face_detection.FaceDetModelLoader import FaceDetModelLoader
-from core.model_handler.face_detection.FaceDetModelHandler import FaceDetModelHandler
-from core.model_loader.face_alignment.FaceAlignModelLoader import FaceAlignModelLoader
-from core.model_handler.face_alignment.FaceAlignModelHandler import FaceAlignModelHandler
-from core.model_loader.face_recognition.FaceRecModelLoader import FaceRecModelLoader
-from core.model_handler.face_recognition.FaceRecModelHandler import FaceRecModelHandler
-from core.image_cropper.arcface_cropper.FaceRecImageCropper import FaceRecImageCropper
+from face_sdk.core.model_loader.face_detection.FaceDetModelLoader import FaceDetModelLoader
+from face_sdk.core.model_handler.face_detection.FaceDetModelHandler import FaceDetModelHandler
+from face_sdk.core.model_loader.face_alignment.FaceAlignModelLoader import FaceAlignModelLoader
+from face_sdk.core.model_handler.face_alignment.FaceAlignModelHandler import FaceAlignModelHandler
+from face_sdk.core.model_loader.face_recognition.FaceRecModelLoader import FaceRecModelLoader
+from face_sdk.core.model_handler.face_recognition.FaceRecModelHandler import FaceRecModelHandler
+from face_sdk.core.image_cropper.arcface_cropper.FaceRecImageCropper import FaceRecImageCropper
 
 # Configure logging
 logging.config.fileConfig("face_sdk/config/logging.conf")
