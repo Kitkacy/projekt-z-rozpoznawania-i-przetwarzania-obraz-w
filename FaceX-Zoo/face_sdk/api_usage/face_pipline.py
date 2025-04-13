@@ -77,16 +77,14 @@ if __name__ == '__main__':
         logger.error(e)
         sys.exit(-1)
     else:
-        logger.info('Success!2')
+        logger.info('Success!')
 
     # read image and get face features.
     image_path = 'api_usage/test_images/test1.jpg'
     image = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    logger.info('1')
     face_cropper = FaceRecImageCropper()
     try:
         dets = faceDetModelHandler.inference_on_image(image)
-        logger.info('2')
         face_nums = dets.shape[0]
         if face_nums != 2:
             logger.info('Input image should contain two faces to compute similarity!')
@@ -106,5 +104,5 @@ if __name__ == '__main__':
         logger.error(e)
         sys.exit(-1)
     else:
-        logger.info('Success!eeqreqreqeqe')
-        logger.info('Success!3')
+        logger.info('Success!')
+        logger.info('Success!')

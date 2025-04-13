@@ -1,78 +1,87 @@
 """
-@author: JiXuan Xu, Jun Wang
-@date: 20201023
-@contact: jun21wangustc@gmail.com 
+@author: FaceX-Zoo Contributors
 """
 import sys
-sys.path.append('.')
+import yaml
 import logging.config
 logging.config.fileConfig("config/logging.conf")
 logger = logging.getLogger('api')
 
-import yaml
-import cv2
 import numpy as np
 from core.model_loader.face_alignment.FaceAlignModelLoader import FaceAlignModelLoader
 from core.model_handler.face_alignment.FaceAlignModelHandler import FaceAlignModelHandler
+from core.image_cropper.arcface_cropper.FaceRecImageCropper import FaceRecImageCropper
 
-with open('config/model_conf.yaml') as f:
-    model_conf = yaml.load(f)
-
-if __name__ == '__main__':
-    # common setting for all model, need not modify.
-    model_path = 'models'
-
-    # model setting, modified along with model
-    scene = 'non-mask'
-    model_category = 'face_alignment'
-    model_name =  model_conf[scene][model_category]
-
-    logger.info('Start to load the face landmark model...')
-    # load model
-    try:
-        faceAlignModelLoader = FaceAlignModelLoader(model_path, model_category, model_name)
-    except Exception as e:
-        logger.error('Failed to parse model configuration file!')
-        logger.error(e)
-        sys.exit(-1)
-    else:
-        logger.info('Successfully parsed the model configuration file model_meta.json!')
-
-    try:
-        model, cfg = faceAlignModelLoader.load_model()
-    except Exception as e:
-        logger.error('Model loading failed!')
-        logger.error(e)
-        sys.exit(-1)
-    else:
-        logger.info('Successfully loaded the face landmark model!')
-
-    faceAlignModelHandler = FaceAlignModelHandler(model, 'cpu', cfg)
-
-    # read image
-    image_path = 'api_usage/test_images/test1.jpg'
-    image_det_txt_path = 'api_usage/test_images/test1_detect_res.txt'
-    image = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    with open(image_det_txt_path, 'r') as f:
-        lines = f.readlines()
-    try:
-        for i, line in enumerate(lines):
-            line = line.strip().split()
-            det = np.asarray(list(map(int, line[0:4])), dtype=np.int32)
-            landmarks = faceAlignModelHandler.inference_on_image(image, det)
-
-            save_path_img = 'api_usage/temp/test1_' + 'landmark_res' + str(i) + '.jpg'
-            save_path_txt = 'api_usage/temp/test1_' + 'landmark_res' + str(i) + '.txt'
-            image_show = image.copy()
-            with open(save_path_txt, "w") as fd:
-                for (x, y) in landmarks.astype(np.int32):
-                    cv2.circle(image_show, (x, y), 2, (255, 0, 0),-1)
-                    line = str(x) + ' ' + str(y) + ' '
-                    fd.write(line)
-            cv2.imwrite(save_path_img, image_show)
-    except Exception as e:
-        logger.error('Face landmark failed!')
-        logger.error(e)
-        sys.exit(-1)
-    else:
-        logger.info('Successful face landmark!')
+class FaceAlignment:
+    """Face alignment and landmark detection wrapper class"""
+    
+    def __init__(self, device='cpu'):
+        """Initialize face alignment model
+        
+        Args:
+            device: Device to run inference on ('cpu' or 'cuda')
+        """
+        self.device = device
+        
+        # Load model configuration
+        with open('config/model_conf.yaml') as f:
+            model_conf = yaml.load(f, Loader=yaml.FullLoader)
+            
+        # Common settings
+        model_path = 'models'
+        scene = 'non-mask'
+        model_category = 'face_alignment'
+        model_name = model_conf[scene][model_category]
+        
+        # Load alignment model
+        try:
+            faceAlignModelLoader = FaceAlignModelLoader(model_path, model_category, model_name)
+            model, cfg = faceAlignModelLoader.load_model()
+            self.handler = FaceAlignModelHandler(model, self.device, cfg)
+            self.cropper = FaceRecImageCropper()
+        except Exception as e:
+            logger.error('Failed to load face alignment model!')
+            logger.error(e)
+            raise e
+    
+    def get_landmarks(self, image, detection):
+        """Get facial landmarks for a detected face
+        
+        Args:
+            image: Input image (numpy.ndarray)
+            detection: Face detection result [x1, y1, x2, y2, confidence]
+            
+        Returns:
+            numpy.ndarray: Array of facial landmarks
+        """
+        try:
+            # Convert detection to integer values if needed
+            det = detection.astype(np.int32) if isinstance(detection, np.ndarray) else np.array(detection[:4], dtype=np.int32)
+            landmarks = self.handler.inference_on_image(image, det)
+            return landmarks
+        except Exception as e:
+            logger.error('Face landmark detection failed!')
+            logger.error(e)
+            raise e
+    
+    def align(self, image, landmarks):
+        """Align and crop face using landmarks
+        
+        Args:
+            image: Input image (numpy.ndarray)
+            landmarks: Facial landmarks
+            
+        Returns:
+            numpy.ndarray: Aligned face image
+        """
+        try:
+            landmarks_list = []
+            for (x, y) in landmarks.astype(np.int32):
+                landmarks_list.extend((x, y))
+            
+            aligned_face = self.cropper.crop_image_by_mat(image, landmarks_list)
+            return aligned_face
+        except Exception as e:
+            logger.error('Face alignment failed!')
+            logger.error(e)
+            raise e
