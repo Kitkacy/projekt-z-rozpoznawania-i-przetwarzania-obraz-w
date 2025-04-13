@@ -11,16 +11,20 @@ logger = logging.getLogger('api')
 
 import yaml
 import cv2
+import torch
 import numpy as np
 from core.model_loader.face_detection.FaceDetModelLoader import FaceDetModelLoader
 from core.model_handler.face_detection.FaceDetModelHandler import FaceDetModelHandler
 
 with open('config/model_conf.yaml') as f:
-    model_conf = yaml.load(f)
+    model_conf = yaml.load(f, Loader=yaml.FullLoader)
 
 if __name__ == '__main__':
     # common setting for all model, need not modify.
     model_path = 'models'
+
+    # setting device on GPU if available, else CPU
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # model setting, modified along with model
     scene = 'non-mask'
@@ -48,9 +52,9 @@ if __name__ == '__main__':
         logger.info('Successfully loaded the face detection model!')
 
     # read image
-    image_path = 'api_usage/test_images/test1.jpg'
+    image_path = 'api_usage/test_images/test5.jpg'
     image = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    faceDetModelHandler = FaceDetModelHandler(model, 'cuda:0', cfg)
+    faceDetModelHandler = FaceDetModelHandler(model, device, cfg)
 
     try:
         dets = faceDetModelHandler.inference_on_image(image)

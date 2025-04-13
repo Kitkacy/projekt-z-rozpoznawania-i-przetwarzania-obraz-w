@@ -16,7 +16,7 @@ import cv2
 from core.image_cropper.arcface_cropper.FaceRecImageCropper import FaceRecImageCropper
 
 if __name__ == '__main__':
-    image_path = 'api_usage/test_images/test1.jpg'
+    image_path = 'api_usage/test_images/test5.jpg'
     image_info_file = 'api_usage/test_images/test1_landmark_res0.txt'
     line = open(image_info_file).readline().strip()
     landmarks_str = line.split(' ')

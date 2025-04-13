@@ -53,3 +53,15 @@ INFO 2021-01-11 17:11:02 FaceAlignModelLoader.py: 30] Successfully loaded the fa
 INFO 2021-01-11 17:11:02 FaceRecModelLoader.py: 18] Start to analyze the face recognition model, model path: models, model category: face_recognition，model name: face_recognition_1.0
 INFO 2021-01-11 17:11:02 BaseModelLoader.py: 34] Successfully parsed the model configuration file meta.json!
 INFO 2021-01-11 17:11:02 FaceRecModelLoader.py: 31] Successfully loaded the face recognition model!
+INFO 2025-04-13 14:56:37 FaceDetModelLoader.py: 16] Start to analyze the face detection model, model path: models, model category: face_detection，model name: face_detection_1.0
+INFO 2025-04-13 14:56:37 BaseModelLoader.py: 34] Successfully parsed the model configuration file meta.json!
+ERROR 2025-04-13 14:56:37 FaceDetModelLoader.py: 30] The model failed to load, please check the model path: models/face_detection/face_detection_1.0/face_detection_retina.pkl!
+INFO 2025-04-13 14:57:11 FaceDetModelLoader.py: 16] Start to analyze the face detection model, model path: models, model category: face_detection，model name: face_detection_1.0
+INFO 2025-04-13 14:57:11 BaseModelLoader.py: 34] Successfully parsed the model configuration file meta.json!
+INFO 2025-04-13 14:57:12 FaceDetModelLoader.py: 37] Successfully loaded the face detection model!
+INFO 2025-04-13 14:57:12 FaceAlignModelLoader.py: 16] Start to analyze the face landmark model, model path: models, model category: face_alignment，model name: face_alignment_1.0
+INFO 2025-04-13 14:57:12 BaseModelLoader.py: 34] Successfully parsed the model configuration file meta.json!
+INFO 2025-04-13 14:57:12 FaceAlignModelLoader.py: 32] Successfully loaded the face landmark model!
+INFO 2025-04-13 14:57:12 FaceRecModelLoader.py: 16] Start to analyze the face recognition model, model path: models, model category: face_recognition，model name: face_recognition_1.0
+INFO 2025-04-13 14:57:12 BaseModelLoader.py: 34] Successfully parsed the model configuration file meta.json!
+INFO 2025-04-13 14:57:12 FaceRecModelLoader.py: 34] Successfully loaded the face recognition model!

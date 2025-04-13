@@ -33,6 +33,9 @@ if __name__ == '__main__':
     # common setting for all models, need not modify.
     model_path = 'models'
 
+    # setting device on GPU if available, else CPU
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
     # face detection model setting.
     scene = 'non-mask'
     model_category = 'face_detection'
@@ -41,7 +44,7 @@ if __name__ == '__main__':
     try:
         faceDetModelLoader = FaceDetModelLoader(model_path, model_category, model_name)
         model, cfg = faceDetModelLoader.load_model()
-        faceDetModelHandler = FaceDetModelHandler(model, 'cuda:0', cfg)
+        faceDetModelHandler = FaceDetModelHandler(model, device, cfg)
     except Exception as e:
         logger.error('Falied to load face detection Model.')
         logger.error(e)
@@ -56,7 +59,7 @@ if __name__ == '__main__':
     try:
         faceAlignModelLoader = FaceAlignModelLoader(model_path, model_category, model_name)
         model, cfg = faceAlignModelLoader.load_model()
-        faceAlignModelHandler = FaceAlignModelHandler(model, 'cuda:0', cfg)
+        faceAlignModelHandler = FaceAlignModelHandler(model, device, cfg)
     except Exception as e:
         logger.error('Failed to load face landmark model.')
         logger.error(e)
@@ -72,7 +75,7 @@ if __name__ == '__main__':
     try:
         faceParsingModelLoader = FaceParsingModelLoader(model_path, model_category, model_name)
         model, cfg = faceParsingModelLoader.load_model()
-        faceParsingModelHandler = FaceParsingModelHandler(model, 'cuda:0', cfg)
+        faceParsingModelHandler = FaceParsingModelHandler(model, device, cfg)
     except Exception as e:
         logger.error('Falied to load face parsing Model.')
         logger.error(e)

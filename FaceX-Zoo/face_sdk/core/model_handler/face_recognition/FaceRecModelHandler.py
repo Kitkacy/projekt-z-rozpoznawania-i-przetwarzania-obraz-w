@@ -26,6 +26,9 @@ class FaceRecModelHandler(BaseModelHandler):
         Init FaceRecModelHandler settings. 
         """
         super().__init__(model, device, cfg)
+        # dodałem
+        self.model.to(self.device)
+        #
         self.mean = self.cfg['mean']
         self.std = self.cfg['std']
         self.input_height = self.cfg['input_height']
@@ -44,7 +47,10 @@ class FaceRecModelHandler(BaseModelHandler):
         image = torch.unsqueeze(image, 0)
         image = image.to(self.device)
         with torch.no_grad():
+            print("Model device:", next(self.model.parameters()).device)
+            print("Input device:", image.device)
             feature = self.model(image).cpu().numpy()
+            print("self._preprocess successed!!!")
         feature = np.squeeze(feature)
         return feature
 
