@@ -47,7 +47,7 @@ if __name__ == '__main__':
     else:
         logger.info('Successfully loaded the face landmark model!')
 
-    faceAlignModelHandler = FaceAlignModelHandler(model, 'cuda:0', cfg)
+    faceAlignModelHandler = FaceAlignModelHandler(model, 'cpu', cfg)
 
     # read image
     image_path = 'api_usage/test_images/test1.jpg'

@@ -24,8 +24,9 @@ class FaceDetModelLoader(BaseModelLoader):
         self.cfg['confidence_threshold'] = self.meta_conf['confidence_threshold']
         
     def load_model(self):
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         try:
-            model = torch.load(self.cfg['model_file_path'])
+            model = torch.load(self.cfg['model_file_path'], map_location=device, weights_only=False)
         except Exception as e:
             logger.error('The model failed to load, please check the model path: %s!'
                          % self.cfg['model_file_path'])
