@@ -1,4 +1,5 @@
-# projekt-z-rozpoznawania-i-przetwarzania-obraz-w
+# Projekt RIPO PWr 
+
 
 ## Wykorzystanie API FaceX-Zoo
 
