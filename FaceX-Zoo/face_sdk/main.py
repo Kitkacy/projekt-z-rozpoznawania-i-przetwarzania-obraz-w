@@ -184,7 +184,7 @@ def option_3_live_recognition():
             
 
         
-        cv2.putText(frame, "Naciśnij 'q' aby powrocic do menu", 
+        cv2.putText(frame, "Nacisnij 'q' aby powrocic do menu", 
                     (10, frame.shape[0] - 10), 
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
@@ -206,7 +206,7 @@ def option_4_video_file():
         return
     
     cap = cv2.VideoCapture(path)
-    info_text = f"{len(reference_features)} twarze do porównania załadowane"
+    info_text = f"{len(reference_features)} twarze do porównania zaladowane"
     
     while True:
         ret, frame = cap.read()
