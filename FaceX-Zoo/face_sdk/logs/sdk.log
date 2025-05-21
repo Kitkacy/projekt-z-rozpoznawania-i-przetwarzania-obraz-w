@@ -18,3 +18,31 @@ INFO 2025-04-14 21:49:33 main.py: 64 Pomyślnie załadowano referencyjną twarz:
 INFO 2025-04-14 21:49:33 main.py: 42 Przetwarzanie obrazu referencyjnego: wicek.png
 INFO 2025-04-14 21:49:33 main.py: 64 Pomyślnie załadowano referencyjną twarz: wicek.png
 INFO 2025-04-14 21:49:33 main.py: 72 Zaladowano 4 twarzy do porownania
+INFO 2025-05-11 17:55:33 FaceDetModelLoader.py: 16 Start to analyze the face detection model, model path: models, model category: face_detection，model name: face_detection_1.0
+INFO 2025-05-11 17:55:33 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
+INFO 2025-05-11 17:55:33 FaceDetModelLoader.py: 35 Successfully loaded the face detection model!
+INFO 2025-05-11 17:55:33 FaceAlignModelLoader.py: 16 Start to analyze the face landmark model, model path: models, model category: face_alignment，model name: face_alignment_1.0
+INFO 2025-05-11 17:55:33 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
+INFO 2025-05-11 17:55:33 FaceAlignModelLoader.py: 30 Successfully loaded the face landmark model!
+INFO 2025-05-11 17:55:33 FaceRecModelLoader.py: 16 Start to analyze the face recognition model, model path: models, model category: face_recognition，model name: face_recognition_1.0
+INFO 2025-05-11 17:55:33 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
+INFO 2025-05-11 17:55:33 FaceRecModelLoader.py: 31 Successfully loaded the face recognition model!
+INFO 2025-05-11 17:55:33 main.py: 25 Folder z referencyjnymi twarzami: Twarze
+INFO 2025-05-11 17:56:07 main.py: 37 Znaleziono 5 obrazy referencyjne
+INFO 2025-05-11 17:56:07 main.py: 42 Przetwarzanie obrazu referencyjnego: ja.jpg
+INFO 2025-05-11 17:56:09 main.py: 64 Pomyślnie załadowano referencyjną twarz: ja.jpg
+INFO 2025-05-11 17:56:09 main.py: 42 Przetwarzanie obrazu referencyjnego: leon.png
+INFO 2025-05-11 17:56:10 main.py: 64 Pomyślnie załadowano referencyjną twarz: leon.png
+INFO 2025-05-11 17:56:10 main.py: 42 Przetwarzanie obrazu referencyjnego: michal.png
+INFO 2025-05-11 17:56:10 main.py: 64 Pomyślnie załadowano referencyjną twarz: michal.png
+INFO 2025-05-11 17:56:10 main.py: 42 Przetwarzanie obrazu referencyjnego: test.jpg
+INFO 2025-05-11 17:56:10 main.py: 64 Pomyślnie załadowano referencyjną twarz: test.jpg
+INFO 2025-05-11 17:56:10 main.py: 42 Przetwarzanie obrazu referencyjnego: wicek.png
+INFO 2025-05-11 17:56:10 main.py: 64 Pomyślnie załadowano referencyjną twarz: wicek.png
+INFO 2025-05-11 17:56:10 main.py: 72 Zaladowano 5 twarzy do porownania
+INFO 2025-05-11 21:22:35 FaceAlignModelLoader.py: 16 Start to analyze the face landmark model, model path: models, model category: face_alignment，model name: face_alignment_1.0
+INFO 2025-05-11 21:22:35 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
+INFO 2025-05-11 21:22:35 FaceAlignModelLoader.py: 30 Successfully loaded the face landmark model!
+INFO 2025-05-11 21:30:41 FaceAlignModelLoader.py: 16 Start to analyze the face landmark model, model path: models, model category: face_alignment，model name: face_alignment_1.0
+INFO 2025-05-11 21:30:41 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
+INFO 2025-05-11 21:30:41 FaceAlignModelLoader.py: 30 Successfully loaded the face landmark model!

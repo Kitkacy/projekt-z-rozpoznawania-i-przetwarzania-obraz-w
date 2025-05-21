@@ -30,7 +30,7 @@ class Evaluator:
     """
     def __init__(self, test_set, data_conf_file):
         self.test_set = test_set
-        feature_extractor = CommonExtractor('cuda:0')
+        feature_extractor = CommonExtractor('cpu')
         with open(data_conf_file) as f:
             data_conf = yaml.load(f)[test_set]
             if test_set == 'IJBC':

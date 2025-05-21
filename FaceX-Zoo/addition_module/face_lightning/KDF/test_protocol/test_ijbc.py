@@ -47,7 +47,7 @@ if __name__ == '__main__':
     #model def
     backbone_factory = BackboneFactory(args.backbone_type, args.backbone_conf_file)
     model_loader = ModelLoader(backbone_factory)
-    feature_extractor = CommonExtractor('cuda:0')
+    feature_extractor = CommonExtractor('cpu')
 
     ijbc_evaluator = IJBCEvaluator(template_media_list_path, template_pair_list_path, 
                                    image_score_list_path, data_loader, feature_extractor)

@@ -55,3 +55,8 @@ IJBC:
     template_media_list_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/ijbc_face_tid_mid.txt
     template_pair_list_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/ijbc_template_pair_label.txt
     image_score_list_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/ijbc_name_5pts_score.txt
+
+GlassesTest:
+    pairs_file_path: 'C:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/train_list_glasses_pairs.txt'
+    cropped_face_folder: 'C:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/faces_with_glasses'
+    image_list_file_path: 'C:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/glasses_img_list.txt'

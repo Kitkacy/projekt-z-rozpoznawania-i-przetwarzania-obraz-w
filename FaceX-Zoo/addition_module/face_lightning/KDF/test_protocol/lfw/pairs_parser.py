@@ -179,8 +179,10 @@ class PairsParserFactory(object):
         self.pairs_file = pairs_file
         self.test_set = test_set
     def get_parser(self):
+        print("test")
         if self.test_set == 'LFW':
-            pairs_parser =  LFW_PairsParser(self.pairs_file)
+            print("test3")
+            pairs_parser = LFW_PairsParser(self.pairs_file)
         elif self.test_set == 'CPLFW':
             pairs_parser = CPLFW_PairsParser(self.pairs_file)
         elif self.test_set == 'CALFW':
@@ -189,6 +191,10 @@ class PairsParserFactory(object):
             pairs_parser = AgeDB_PairsParser(self.pairs_file)
         elif 'RFW' in self.test_set:
             pairs_parser = RFW_PairsParser(self.pairs_file)
+        elif self.test_set == 'GlassesTest':
+            print("test1")
+            pairs_parser = LFW_PairsParser(self.pairs_file)
         else:
+            print("test2")
             pairs_parser = None
         return pairs_parser

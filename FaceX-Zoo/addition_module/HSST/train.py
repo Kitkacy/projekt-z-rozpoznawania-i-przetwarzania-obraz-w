@@ -104,9 +104,9 @@ def train(conf):
     probe_net = backbone_factory.get_backbone()
     gallery_net = backbone_factory.get_backbone()        
     head_factory = HeadFactory(conf.head_type, conf.head_conf_file)
-    prototype = head_factory.get_head().cuda(conf.device)
-    probe_net = torch.nn.DataParallel(probe_net).cuda()
-    gallery_net = torch.nn.DataParallel(gallery_net).cuda()
+    prototype = head_factory.get_head().to('cpu')
+    prototype = head_factory.get_head().to('cpu')
+    prototype = head_factory.get_head().to('cpu')
     optimizer = optim.SGD(probe_net.parameters(), lr=conf.lr, momentum=conf.momentum, weight_decay=5e-4)
     lr_schedule = optim.lr_scheduler.MultiStepLR(optimizer, milestones=conf.milestones, gamma=0.1)
     if conf.resume:

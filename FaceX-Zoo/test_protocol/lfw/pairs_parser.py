@@ -180,7 +180,7 @@ class PairsParserFactory(object):
         self.test_set = test_set
     def get_parser(self):
         if self.test_set == 'LFW':
-            pairs_parser =  LFW_PairsParser(self.pairs_file)
+            pairs_parser = LFW_PairsParser(self.pairs_file)
         elif self.test_set == 'CPLFW':
             pairs_parser = CPLFW_PairsParser(self.pairs_file)
         elif self.test_set == 'CALFW':
@@ -189,6 +189,29 @@ class PairsParserFactory(object):
             pairs_parser = AgeDB_PairsParser(self.pairs_file)
         elif 'RFW' in self.test_set:
             pairs_parser = RFW_PairsParser(self.pairs_file)
+        elif self.test_set == 'GlassesTest':
+            pairs_parser = LFW_PairsParser(self.pairs_file)
         else:
             pairs_parser = None
         return pairs_parser
+
+class SimplePairsParser(PairsParser):
+    """Parser dla par: <ścieżka1> <ścieżka2> <label>"""
+    def parse_pairs(self):
+        test_pair_list = []
+        with open(self.pairs_file, encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                # Zamień backslashe na slashe i rozdziel po dowolnej liczbie białych znaków
+                parts = line.replace("\\", "/").split()
+                if len(parts) >= 3:
+                    # Jeśli jest więcej niż 3 elementy, połącz ścieżki w całość
+                    image_name1 = parts[0]
+                    image_name2 = parts[1]
+                    label = parts[-1]
+                    test_pair_list.append((image_name1, image_name2, int(label)))
+                else:
+                    raise Exception('Line error: %s.' % line)
+        return test_pair_list

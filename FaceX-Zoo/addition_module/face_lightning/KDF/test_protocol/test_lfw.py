@@ -51,7 +51,7 @@ if __name__ == '__main__':
     #model def
     backbone_factory = BackboneFactory(args.backbone_type, args.backbone_conf_file)
     model_loader = ModelLoader(backbone_factory)
-    feature_extractor = CommonExtractor('cuda:0')
+    feature_extractor = CommonExtractor('cpu')
     lfw_evaluator = LFWEvaluator(data_loader, pairs_parser_factory, feature_extractor)
     if os.path.isdir(args.model_path):
         accu_list = []

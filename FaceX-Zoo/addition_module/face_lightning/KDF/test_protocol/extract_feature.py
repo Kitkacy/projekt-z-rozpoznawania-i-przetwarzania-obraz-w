@@ -43,7 +43,7 @@ if __name__ == '__main__':
     model_loader = ModelLoader(backbone_factory)
     model = model_loader.load_model(args.model_path)
     # extract feature.
-    feature_extractor = CommonExtractor('cuda:0')
+    feature_extractor = CommonExtractor('cpu')
     feature_extractor.extract_offline(args.feats_root, model, data_loader)
     if megaface_mask == 1:
         data_loader = DataLoader(CommonTestDataset(masked_cropped_face_folder, masked_image_list_file, False), 
