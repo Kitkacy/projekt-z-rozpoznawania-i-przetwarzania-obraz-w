@@ -51,7 +51,7 @@ def test():
 
     model = model.cuda()
     model = torch.nn.DataParallel(model)
-    model.load_state_dict(torch.load('./DUM/checkpoint/CDCN_U_P1.pkl', map_location='cuda:0'))
+    model.load_state_dict(torch.load('./DUM/checkpoint/CDCN_U_P1.pkl', map_location='cpu'))
 
     print(model)
 

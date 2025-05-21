@@ -130,7 +130,7 @@ def train_one_epoch(data_loader, teacher_model, paraphraser, student_model, tran
 def train(conf):
     """Total training procedure.
     """
-    conf.device = torch.device('cuda:0')
+    conf.device = torch.device('cpu')
     data_loader = DataLoader(ImageDataset(conf.data_root, conf.train_file), 
                              conf.batch_size, True, num_workers = 4)
 
@@ -159,7 +159,7 @@ def train(conf):
     logger.info('The second stage, training the student network......')
 
     translator = define_translator(512, 512, k=0.5)
-    criterion = torch.nn.CrossEntropyLoss().cuda(conf.device)
+    criterion = torch.nn.CrossEntropyLoss().to(torch.device('cpu'))
     kd_loss_factory = KDLossFactory(conf.loss_type, conf.loss_conf_file)
     criterion_kd = kd_loss_factory.get_kd_loss().cuda(conf.device)
     

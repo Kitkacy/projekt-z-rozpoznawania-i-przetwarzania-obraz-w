@@ -19,7 +19,7 @@ class FaceAlignModelLoader(BaseModelLoader):
         self.cfg['img_size'] = self.meta_conf['input_width']
         
     def load_model(self):
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        device = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
         try:
             model = torch.load(self.cfg['model_file_path'], map_location=device, weights_only=False)
         except Exception as e:

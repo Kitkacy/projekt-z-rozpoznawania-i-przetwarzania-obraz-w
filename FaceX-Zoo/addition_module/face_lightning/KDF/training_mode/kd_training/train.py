@@ -118,8 +118,8 @@ def train(conf):
     """
     data_loader = DataLoader(ImageDataset(conf.data_root, conf.train_file), 
                              conf.batch_size, True, num_workers = 4)
-    conf.device = torch.device('cuda:0')
-    criterion = torch.nn.CrossEntropyLoss().cuda(conf.device)
+    conf.device = torch.device('cpu')
+    criterion = torch.nn.CrossEntropyLoss().to(torch.device('cpu'))
     head_factory = HeadFactory(conf.head_type, conf.head_conf_file)
     kd_loss_factory = KDLossFactory(conf.loss_type, conf.loss_conf_file)
     criterion_kd = kd_loss_factory.get_kd_loss().cuda(conf.device)

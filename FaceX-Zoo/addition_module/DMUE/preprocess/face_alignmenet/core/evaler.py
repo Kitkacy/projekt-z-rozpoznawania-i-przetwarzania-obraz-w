@@ -15,7 +15,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu" if torch.cuda.is_available() else "cpu")
 def eval_model(model, dataloaders, dataset_sizes,
                writer, use_gpu=True, epoches=5, dataset='val',
                save_path='./', num_landmarks=68):

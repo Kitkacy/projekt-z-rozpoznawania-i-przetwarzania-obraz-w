@@ -36,5 +36,5 @@ if __name__ == '__main__':
     model_dict.update(new_pretrained_dict)
     model.load_state_dict(model_dict)
     model = torch.nn.DataParallel(model).cuda()
-    extractor = CommonExtractor('cuda:0')
+    extractor = CommonExtractor('cpu')
     extractor.extract_offline(feats_root, model, data_loader)

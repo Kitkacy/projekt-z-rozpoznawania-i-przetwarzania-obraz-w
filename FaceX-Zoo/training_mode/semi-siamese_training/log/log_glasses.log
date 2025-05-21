@@ -2,8 +2,8 @@ C:\Users\Lemon\AppData\Local\Programs\Python\Python311\Lib\site-packages\timm\mo
   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
 C:\Users\Lemon\OneDrive\Dokumenty\GitHub\projekt-z-rozpoznawania-i-przetwarzania-obraz-w\FaceX-Zoo\training_mode\semi-siamese_training\../..\test_protocol\utils\online_val.py:35: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
   data_conf = yaml.load(f)[test_set]
-INFO 2025-05-21 17:12:53 train.py: 189] Start optimization.
-INFO 2025-05-21 17:12:53 train.py: 190] Namespace(data_root='c:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/faces_with_glasses', train_file='c:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/train_list_glasses.txt', backbone_type='MobileFaceNet', backbone_conf_file='../backbone_conf.yaml', head_type='SST_Prototype', head_conf_file='../head_conf.yaml', lr=0.01, out_dir='out_dir_glasses', epoches=100, step='50,75,90', print_freq=50, save_freq=5, batch_size=128, momentum=0.9, alpha=0.999, log_dir='log', tensorboardx_logdir='sst_mobileface_glasses', pretrain_model='mv_epoch_8.pt', resume=False, evaluate=True, test_set='GlassesTest', test_data_conf_file='c:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/test_protocol/data_conf.yaml', milestones=[50, 75, 90], writer=<tensorboardX.writer.SummaryWriter object at 0x000001D874DE7DD0>, evaluator=<test_protocol.utils.online_val.Evaluator object at 0x000001D8756314D0>)
+INFO 2025-05-21 17:35:17 train.py: 189] Start optimization.
+INFO 2025-05-21 17:35:17 train.py: 190] Namespace(data_root='c:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/faces_with_glasses', train_file='c:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/train_data/train_list_glasses.txt', backbone_type='MobileFaceNet', backbone_conf_file='../backbone_conf.yaml', head_type='SST_Prototype', head_conf_file='../head_conf.yaml', lr=0.01, out_dir='out_dir_glasses', epoches=100, step='50,75,90', print_freq=50, save_freq=5, batch_size=128, momentum=0.9, alpha=0.999, log_dir='log', tensorboardx_logdir='sst_mobileface_glasses', pretrain_model='mv_epoch_8.pt', resume=False, evaluate=True, test_set='GlassesTest', test_data_conf_file='c:/Users/Lemon/OneDrive/Dokumenty/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/test_protocol/data_conf.yaml', milestones=[50, 75, 90], writer=<tensorboardX.writer.SummaryWriter object at 0x000001B2B7137DD0>, evaluator=<test_protocol.utils.online_val.Evaluator object at 0x000001B2B89AD490>)
 C:\Users\Lemon\AppData\Local\Programs\Python\Python311\Lib\site-packages\timm\models\layers\__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
 C:\Users\Lemon\AppData\Local\Programs\Python\Python311\Lib\site-packages\timm\models\layers\__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
@@ -16,7 +16,7 @@ backbone param:
 {'feat_dim': 512, 'out_h': 7, 'out_w': 7}
 head param:
 {'feat_dim': 512, 'queue_size': 16384, 'scale': 32.0, 'loss_type': 'am_softmax', 'margin': 0.35}
-Valid ids: 1565.
+Valid ids: 1373.
 Traceback (most recent call last):
   File "C:\Users\Lemon\OneDrive\Dokumenty\GitHub\projekt-z-rozpoznawania-i-przetwarzania-obraz-w\FaceX-Zoo\training_mode\semi-siamese_training\train.py", line 191, in <module>
     train(args)

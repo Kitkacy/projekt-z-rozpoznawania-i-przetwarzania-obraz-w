@@ -98,8 +98,8 @@ def train_one_epoch(data_loader, probe_net, gallery_net, prototype, optimizer,
 def train(conf):
     """Total training procedure. 
     """ 
-    conf.device = torch.device('cuda:0')
-    criterion = torch.nn.CrossEntropyLoss().cuda(conf.device)
+    conf.device = torch.device('cpu')
+    criterion = torch.nn.CrossEntropyLoss().to(torch.device('cpu'))
     backbone_factory = BackboneFactory(conf.backbone_type, conf.backbone_conf_file)
     probe_net = backbone_factory.get_backbone()
     gallery_net = backbone_factory.get_backbone()        

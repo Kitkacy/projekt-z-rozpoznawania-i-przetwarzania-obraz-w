@@ -20,7 +20,7 @@ class FaceRecModelLoader(BaseModelLoader):
         self.cfg['std'] = self.meta_conf['std']
         
     def load_model(self):
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        device = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
         try:
             model = torch.load(self.cfg['model_file_path'], map_location=device, weights_only=False)
         except Exception as e:

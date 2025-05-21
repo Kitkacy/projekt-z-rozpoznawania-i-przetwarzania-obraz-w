@@ -32,7 +32,7 @@ def load_model():
     HG_BLOCKS = 4
     END_RELU = False
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu" if torch.cuda.is_available() else "cpu")
     # print(device)
 
     model_ft = models.FAN(HG_BLOCKS, END_RELU, GRAY_SCALE, NUM_LANDMARKS)

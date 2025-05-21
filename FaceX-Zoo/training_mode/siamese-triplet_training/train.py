@@ -93,8 +93,8 @@ def train(conf):
     """
     data_loader = DataLoader(ImageDataset_SST(conf.data_root, conf.train_file), 
                              conf.batch_size, True, num_workers = 4)
-    conf.device = torch.device('cuda:0')
-    #criterion = OnlineContrastiveLoss(margin=2.5, pair_selector=HardNegativePairSelector(cpu=False)).cuda(torch.device('cuda:0'))
+    conf.device = torch.device('cpu')
+    #criterion = OnlineContrastiveLoss(margin=2.5, pair_selector=HardNegativePairSelector(cpu=False)).cuda(torch.device('cpu'))
 
     triplet_selector=FunctionNegativeTripletSelector(margin=2.5, negative_selection_fn=random_hard_negative, cpu=False)
     criterion = OnlineTripletLoss(margin=2.5, triplet_selector=triplet_selector).cuda(conf.device)

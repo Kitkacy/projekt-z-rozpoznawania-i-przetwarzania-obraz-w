@@ -104,8 +104,8 @@ def train(conf):
     """
     data_loader = DataLoader(ImageDataset(conf.data_root, conf.train_file), 
                              conf.batch_size, True, num_workers = 4)
-    conf.device = torch.device('cuda:0')
-    criterion = torch.nn.CrossEntropyLoss().cuda(conf.device)
+    conf.device = torch.device('cpu')
+    criterion = torch.nn.CrossEntropyLoss().to(torch.device('cpu'))
     backbone_factory = BackboneFactory(conf.backbone_type, conf.backbone_conf_file)    
     head_factory = HeadFactory(conf.head_type, conf.head_conf_file)
     model = FaceModel(backbone_factory, head_factory)
