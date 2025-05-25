@@ -3,6 +3,8 @@ import os
 import numpy as np
 import logging.config
 import shutil
+import tkinter as tk
+from tkinter import simpledialog, messagebox, filedialog
 
 from api_usage.face_detection import FaceDetection
 from api_usage.face_alignment import FaceAlignment
@@ -74,31 +76,33 @@ def load_faces():
     return reference_features
 
 
-def option_1_take_photo():
+def option_1_take_photo_gui():
     cap = cv2.VideoCapture(0)
-
-    print("Zrób zdjęcie wciskając 'q'.")
+    messagebox.showinfo("Instrukcja", "Zrób zdjęcie wciskając 'q'.")
     while True:
         ret, frame = cap.read()
         if not ret: break
         cv2.imshow("Nagrywanie", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            filename = input("Podaj nazwę pliku (bez rozszerzenia): ")
-            filepath = os.path.join("Twarze", filename + ".jpg")
-            cv2.imwrite(filepath, frame)
-            print("Zdjęcie zapisane:", filepath)
+            filename = simpledialog.askstring("Nazwa pliku", "Podaj nazwę pliku (bez rozszerzenia):")
+            if filename:
+                filepath = os.path.join(faces_dir, filename + ".jpg")
+                cv2.imwrite(filepath, frame)
+                messagebox.showinfo("Sukces", f"Zdjęcie zapisane: {filepath}")
             break
     cap.release()
     cv2.destroyAllWindows()
 
-
-def option_2_record_video():
+def option_2_record_video_gui():
     cap = cv2.VideoCapture(0)
-    filename = input("Podaj nazwę pliku (bez rozszerzenia): ")
-    filepath = os.path.join("Twarze", filename + ".mp4")
+    filename = simpledialog.askstring("Nazwa pliku", "Podaj nazwę pliku (bez rozszerzenia):")
+    if not filename:
+        cap.release()
+        return
+    filepath = os.path.join(faces_dir, filename + ".mp4")
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(filepath, fourcc, 20.0, (640,480))
-    print("Nagrywanie... Nacisnij q, by zakończyć.")
+    messagebox.showinfo("Nagrywanie", "Nagrywanie... Naciśnij 'q', by zakończyć.")
     while True:
         ret, frame = cap.read()
         if not ret: break
@@ -109,183 +113,120 @@ def option_2_record_video():
     cap.release()
     out.release()
     cv2.destroyAllWindows()
-    print("Film zapisany:", filepath)
+    messagebox.showinfo("Sukces", f"Film zapisany: {filepath}")
 
-
-
-def option_3_live_recognition():
+def option_3_live_recognition_gui():
     reference_features = load_faces()
     cap = cv2.VideoCapture(0)
     info_text = f"{len(reference_features)} referencyjne twarze załadowane"
-    
     while True:
         ret, frame = cap.read()
         if not ret:
-            print("Nie udało się uzyskać obrazu z kamery.")
+            messagebox.showerror("Błąd", "Nie udało się uzyskać obrazu z kamery.")
             break
-
-        
         dets = app_det.detect(frame)
-        
-        
         cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-        
         for det in dets:
             x1, y1, x2, y2, _ = map(int, det)
             landmarks = app_alignment.get_landmarks(frame, det)
             aligned_face = app_alignment.align(frame, landmarks)
             feature = app_rec.get_feature(aligned_face)
-
-            
             best_match = None
             best_score = -1
-            threshold = 0.5  
-            
+            threshold = 0.5
             if reference_features:
                 for name, ref_feature in reference_features.items():
-                    
                     score = np.dot(feature, ref_feature)
                     if score > best_score:
                         best_score = score
                         best_match = name
-
-                
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                
-                
                 if best_score > threshold:
                     label = f"{os.path.splitext(best_match)[0]} ({best_score:.2f})"
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 else:
                     label = f"Nie rozpoznano ({best_score:.2f})"
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
             else:
-                
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 label = "brak twarzy do porównania"
                 cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-            
             for i in range(landmarks.shape[0]):
                 point_x = int(landmarks[i][0])
                 point_y = int(landmarks[i][1])
-                cv2.circle(frame, (point_x, point_y), 2, (0, 255, 0), 2)  
-
-            
-            for i in range(0, 16):  
+                cv2.circle(frame, (point_x, point_y), 2, (0, 255, 0), 2)
+            for i in range(0, 16):
                 cv2.line(frame, (int(landmarks[i][0]), int(landmarks[i][1])),
                          (int(landmarks[i+1][0]), int(landmarks[i+1][1])), (255, 0, 0), 2)
-            
-            for i in range(17, 22):  
+            for i in range(17, 22):
                 cv2.line(frame, (int(landmarks[i][0]), int(landmarks[i][1])),
                          (int(landmarks[i+1][0]), int(landmarks[i+1][1])), (255, 0, 0), 2)
-            
-            
-
-        
-        cv2.putText(frame, "Nacisnij 'q' aby powrocic do menu", 
-                    (10, frame.shape[0] - 10), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-
-        
+        cv2.putText(frame, "Naciśnij 'q' aby zakończyć", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.imshow('Rozpoznanie twarzy', frame)
-
-        
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
     cap.release()
     cv2.destroyAllWindows()
 
-def option_4_video_file():
+def option_4_video_file_gui():
     reference_features = load_faces()
-    path = input("Podaj ścieżkę do pliku wideo: ")
-    if not os.path.exists(path):
-        print("Nie znaleziono pliku.")
+    path = filedialog.askopenfilename(title="Wybierz plik wideo", filetypes=[("Pliki wideo", "*.mp4;*.avi;*.mov;*.mkv")])
+    if not path or not os.path.exists(path):
+        messagebox.showerror("Błąd", "Nie znaleziono pliku.")
         return
-    
     cap = cv2.VideoCapture(path)
-    info_text = f"{len(reference_features)} twarze do porównania zaladowane"
-    
+    info_text = f"{len(reference_features)} twarze do porównania załadowane"
     while True:
         ret, frame = cap.read()
         if not ret: break
-
-        
         dets = app_det.detect(frame)
-        
-        
         cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-
         for det in dets:
             x1, y1, x2, y2, _ = map(int, det)
             landmarks = app_alignment.get_landmarks(frame, det)
             aligned_face = app_alignment.align(frame, landmarks)
             feature = app_rec.get_feature(aligned_face)
-
-            
             best_match = None
             best_score = -1
             threshold = 0.5
-            
             if reference_features:
                 for name, ref_feature in reference_features.items():
-                    
                     score = np.dot(feature, ref_feature)
                     if score > best_score:
                         best_score = score
                         best_match = name
-
-                
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                
-                
                 if best_score > threshold:
                     label = f"{os.path.splitext(best_match)[0]} ({best_score:.2f})"
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 else:
                     label = f"Nieznane ({best_score:.2f})"
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-        
-        cv2.putText(frame, "Press 'q' to quit", 
-                    (10, frame.shape[0] - 10), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-
-        
+        cv2.putText(frame, "Naciśnij 'q' aby zakończyć", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.imshow('Rozpoznawanie twarzy', frame)
-
-        
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
     cap.release()
     cv2.destroyAllWindows()
 
+# --- GUI ---
+def run_gui():
+    root = tk.Tk()
+    root.title("FaceX-Zoo - Rozpoznawanie twarzy")
+    root.geometry("400x350")
+    label = tk.Label(root, text="Wybierz opcję:", font=("Arial", 14))
+    label.pack(pady=20)
+    btn1 = tk.Button(root, text="Zrób zdjęcie", width=30, command=option_1_take_photo_gui)
+    btn1.pack(pady=5)
+    btn2 = tk.Button(root, text="Nagraj film", width=30, command=option_2_record_video_gui)
+    btn2.pack(pady=5)
+    btn3 = tk.Button(root, text="Rozpoznawanie twarzy na żywo", width=30, command=option_3_live_recognition_gui)
+    btn3.pack(pady=5)
+    btn4 = tk.Button(root, text="Rozpoznawanie twarzy z pliku wideo", width=30, command=option_4_video_file_gui)
+    btn4.pack(pady=5)
+    btn_exit = tk.Button(root, text="Zakończ", width=30, command=root.destroy)
+    btn_exit.pack(pady=20)
+    root.mainloop()
 
-def show_menu():
-    print("\nWybierz opcję:")
-    print("1. Zrób zdjęcie")
-    print("2. Nagraj film")
-    print("3. Rozpoznawanie twarzy na żywo")
-    print("4. Rozpoznawanie twarzy z pliku wideo")
-    print("0. Zakończ")
-
-while True:
-    show_menu()
-    choice = input("Wybór: ")
-
-    if choice == '1':
-        option_1_take_photo()
-    elif choice == '2':
-        option_2_record_video()
-    elif choice == '3':
-        option_3_live_recognition()
-    elif choice == '4':
-        option_4_video_file()
-    elif choice == '0':
-        print("Zakończono program.")
-        break
-    else:
-        print("Niepoprawny wybór. Spróbuj ponownie.")
+if __name__ == "__main__":
+    run_gui()
