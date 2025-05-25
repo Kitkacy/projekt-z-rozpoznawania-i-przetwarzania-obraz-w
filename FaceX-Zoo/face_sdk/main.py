@@ -5,6 +5,7 @@ import logging.config
 import shutil
 import tkinter as tk
 from tkinter import simpledialog, messagebox, filedialog
+from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 from api_usage.face_detection import FaceDetection
 from api_usage.face_alignment import FaceAlignment
@@ -118,7 +119,7 @@ def option_2_record_video_gui():
 def option_3_live_recognition_gui():
     reference_features = load_faces()
     cap = cv2.VideoCapture(0)
-    info_text = f"{len(reference_features)} referencyjne twarze załadowane"
+    info_text = f"{len(reference_features)} referencyjne twarze zaladowane"
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -143,10 +144,33 @@ def option_3_live_recognition_gui():
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 if best_score > threshold:
                     label = f"{os.path.splitext(best_match)[0]} ({best_score:.2f})"
-                    cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    # Użyj czcionki obsługującej polskie znaki
+                    try:
+                        fontpath = os.path.join(os.path.dirname(__file__), "arial.ttf")
+                        if os.path.exists(fontpath):
+                            font = ImageFont.truetype(fontpath, 22)
+                            pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                            draw = ImageDraw.Draw(pil_img)
+                            draw.text((x1, y1 - 30), label, font=font, fill=(0,255,0))
+                            frame = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+                        else:
+                            cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    except Exception:
+                        cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 else:
-                    label = f"Nie rozpoznano ({best_score:.2f})"
-                    cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                    label = f"Nieznane ({best_score:.2f})"
+                    try:
+                        fontpath = os.path.join(os.path.dirname(__file__), "arial.ttf")
+                        if os.path.exists(fontpath):
+                            font = ImageFont.truetype(fontpath, 22)
+                            pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                            draw = ImageDraw.Draw(pil_img)
+                            draw.text((x1, y1 - 30), label, font=font, fill=(0,0,255))
+                            frame = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+                        else:
+                            cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                    except Exception:
+                        cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             else:
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 label = "brak twarzy do porównania"
@@ -161,7 +185,7 @@ def option_3_live_recognition_gui():
             for i in range(17, 22):
                 cv2.line(frame, (int(landmarks[i][0]), int(landmarks[i][1])),
                          (int(landmarks[i+1][0]), int(landmarks[i+1][1])), (255, 0, 0), 2)
-        cv2.putText(frame, "Naciśnij 'q' aby zakończyć", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(frame, "Nacisnij 'q' aby zakonczyc", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.imshow('Rozpoznanie twarzy', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -175,7 +199,7 @@ def option_4_video_file_gui():
         messagebox.showerror("Błąd", "Nie znaleziono pliku.")
         return
     cap = cv2.VideoCapture(path)
-    info_text = f"{len(reference_features)} twarze do porównania załadowane"
+    info_text = f"{len(reference_features)} twarze do porownania zaladowane"
     while True:
         ret, frame = cap.read()
         if not ret: break
@@ -198,11 +222,34 @@ def option_4_video_file_gui():
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 if best_score > threshold:
                     label = f"{os.path.splitext(best_match)[0]} ({best_score:.2f})"
-                    cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    # Użyj czcionki obsługującej polskie znaki
+                    try:
+                        fontpath = os.path.join(os.path.dirname(__file__), "arial.ttf")
+                        if os.path.exists(fontpath):
+                            font = ImageFont.truetype(fontpath, 22)
+                            pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                            draw = ImageDraw.Draw(pil_img)
+                            draw.text((x1, y1 - 30), label, font=font, fill=(0,255,0))
+                            frame = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+                        else:
+                            cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    except Exception:
+                        cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 else:
                     label = f"Nieznane ({best_score:.2f})"
-                    cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-        cv2.putText(frame, "Naciśnij 'q' aby zakończyć", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                    try:
+                        fontpath = os.path.join(os.path.dirname(__file__), "arial.ttf")
+                        if os.path.exists(fontpath):
+                            font = ImageFont.truetype(fontpath, 22)
+                            pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                            draw = ImageDraw.Draw(pil_img)
+                            draw.text((x1, y1 - 30), label, font=font, fill=(0,0,255))
+                            frame = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+                        else:
+                            cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                    except Exception:
+                        cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        cv2.putText(frame, "Nacisnij 'q' aby zakonczyc", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.imshow('Rozpoznawanie twarzy', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -213,19 +260,56 @@ def option_4_video_file_gui():
 def run_gui():
     root = tk.Tk()
     root.title("FaceX-Zoo - Rozpoznawanie twarzy")
-    root.geometry("400x350")
-    label = tk.Label(root, text="Wybierz opcję:", font=("Arial", 14))
-    label.pack(pady=20)
-    btn1 = tk.Button(root, text="Zrób zdjęcie", width=30, command=option_1_take_photo_gui)
-    btn1.pack(pady=5)
-    btn2 = tk.Button(root, text="Nagraj film", width=30, command=option_2_record_video_gui)
-    btn2.pack(pady=5)
-    btn3 = tk.Button(root, text="Rozpoznawanie twarzy na żywo", width=30, command=option_3_live_recognition_gui)
-    btn3.pack(pady=5)
-    btn4 = tk.Button(root, text="Rozpoznawanie twarzy z pliku wideo", width=30, command=option_4_video_file_gui)
-    btn4.pack(pady=5)
-    btn_exit = tk.Button(root, text="Zakończ", width=30, command=root.destroy)
+    root.geometry("600x700")
+    root.resizable(False, False)
+
+    # Wczytaj obraz jako tło
+    try:
+        logo_path = os.path.join(os.path.dirname(__file__), "face_logo.png")
+        bg_img = Image.open(logo_path)
+        bg_img = bg_img.resize((600, 700), Image.LANCZOS)
+        bg_photo = ImageTk.PhotoImage(bg_img)
+        bg_label = tk.Label(root, image=bg_photo)
+        bg_label.image = bg_photo
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+    except Exception as e:
+        logger.warning(f"Nie udało się załadować grafiki tła: {e}")
+
+    # Półprzezroczysty panel na opcje
+    panel = tk.Frame(root, bg="#ffffff", bd=0)
+    panel.place(relx=0.5, rely=0.5, anchor="center", width=400, height=420)
+
+    label = tk.Label(panel, text="Wybierz opcję:", font=("Segoe UI", 20, "bold"), bg="#ffffff", fg="#1a237e")
+    label.pack(pady=(30, 18))
+
+    button_style = {
+        "font": ("Segoe UI", 14, "bold"),
+        "bg": "#1976d2",
+        "fg": "white",
+        "activebackground": "#63a4ff",
+        "activeforeground": "#1a237e",
+        "relief": tk.RAISED,
+        "bd": 3,
+        "highlightthickness": 0,
+        "cursor": "hand2",
+        "height": 2,
+        "width": 28
+    }
+
+    btn1 = tk.Button(panel, text="Zrób zdjęcie", command=option_1_take_photo_gui, **button_style)
+    btn1.pack(pady=7)
+    btn2 = tk.Button(panel, text="Nagraj film", command=option_2_record_video_gui, **button_style)
+    btn2.pack(pady=7)
+    btn3 = tk.Button(panel, text="Rozpoznawanie twarzy na żywo", command=option_3_live_recognition_gui, **button_style)
+    btn3.pack(pady=7)
+    btn4 = tk.Button(panel, text="Rozpoznawanie twarzy\nz pliku wideo", command=option_4_video_file_gui, **button_style, justify="center")
+    btn4.pack(pady=7)
+    exit_style = button_style.copy()
+    exit_style["bg"] = "#b71c1c"
+    exit_style["activebackground"] = "#ef5350"
+    btn_exit = tk.Button(panel, text="Zakończ", command=root.destroy, **exit_style)
     btn_exit.pack(pady=20)
+
     root.mainloop()
 
 if __name__ == "__main__":
