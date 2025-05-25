@@ -47,7 +47,7 @@ def contrast_depth_conv(input):
 
     kernel_filter = np.array(kernel_filter_list, np.float32)
 
-    kernel_filter = torch.from_numpy(kernel_filter.astype(np.float)).float().cuda()
+    kernel_filter = torch.from_numpy(kernel_filter.astype(np.float)).float().to('cpu')
     # weights (in_channel, out_channel, kernel, kernel)
     kernel_filter = kernel_filter.unsqueeze(dim=1)
 
@@ -67,7 +67,7 @@ class Contrast_depth_loss(nn.Module):
         contrast_out = contrast_depth_conv(out)
         contrast_label = contrast_depth_conv(label)
 
-        criterion_MSE = nn.MSELoss().cuda()
+        criterion_MSE = nn.MSELoss().to('cpu')
 
         loss = criterion_MSE(contrast_out, contrast_label)
 
@@ -91,7 +91,7 @@ def train_test():
     model = CDCN_u(basic_conv=Conv2d_cd, theta=0.7)
     # model = ResNet18_u()
 
-    model = model.cuda()
+    model = model.to('cpu')
     model = torch.nn.DataParallel(model)
 
     lr = args.lr
@@ -100,8 +100,8 @@ def train_test():
 
     print(model)
 
-    criterion_absolute_loss = nn.MSELoss().cuda()
-    criterion_contrastive_loss = Contrast_depth_loss().cuda()
+    criterion_absolute_loss = nn.MSELoss().to('cpu')
+    criterion_contrastive_loss = Contrast_depth_loss().to('cpu')
 
     for epoch in range(args.epochs):
         if (epoch + 1) % args.step_size == 0:
@@ -130,8 +130,8 @@ def train_test():
 
         for i, sample_batched in enumerate(dataloader_train):
             # get the inputs
-            inputs, map_label, spoof_label = sample_batched['image_x'].cuda(), sample_batched['map_x'].cuda(), \
-                                             sample_batched['spoofing_label'].cuda()
+            inputs, map_label, spoof_label = sample_batched['image_x'].to('cpu'), sample_batched['map_x'].to('cpu'), \
+                                             sample_batched['spoofing_label'].to('cpu')
 
             optimizer.zero_grad()
 
@@ -208,8 +208,8 @@ def train_test():
 
                 for i, sample_batched in enumerate(dataloader_val):
                     # get the inputs
-                    inputs, spoof_label = sample_batched['image_x'].cuda(), sample_batched['spoofing_label'].cuda()
-                    val_maps = sample_batched['val_map_x'].cuda()  # binary map from PRNet
+                    inputs, spoof_label = sample_batched['image_x'].to('cpu'), sample_batched['spoofing_label'].to('cpu')
+                    val_maps = sample_batched['val_map_x'].to('cpu')  # binary map from PRNet
 
                     optimizer.zero_grad()
 
@@ -234,8 +234,8 @@ def train_test():
 
                 for i, sample_batched in enumerate(dataloader_test):
                     # get the inputs
-                    inputs, spoof_label = sample_batched['image_x'].cuda(), sample_batched['spoofing_label'].cuda()
-                    test_maps = sample_batched['val_map_x'].cuda()
+                    inputs, spoof_label = sample_batched['image_x'].to('cpu'), sample_batched['spoofing_label'].to('cpu')
+                    test_maps = sample_batched['val_map_x'].to('cpu')
 
                     optimizer.zero_grad()
                     mu, logvar, map_x, x_concat, x_Block1, x_Block2, x_Block3, x_input = model(inputs.squeeze(0))

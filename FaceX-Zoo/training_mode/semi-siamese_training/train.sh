@@ -8,7 +8,7 @@ python train.py \
     --head_conf_file '../head_conf.yaml' \
     --lr 0.01 \
     --out_dir 'out_dir_glasses' \
-    --epoches 100 \
+    --epoches 5 \
     --step '50,75,90' \
     --print_freq 50 \
     --batch_size 128 \

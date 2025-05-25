@@ -7,8 +7,8 @@ class SoftLoss(object):
     def __call__(self, outputs_x, targets_x, softlabel_x, epoch=None):
         # output_x: tensor
         # softlabel_x: tensor , size like output_x
-        probs_x = torch.softmax(outputs_x, dim=1).cuda()
-        mask = torch.ones_like(probs_x).scatter_(1, targets_x.view(-1, 1).long(), 0).cuda()
+        probs_x = torch.softmax(outputs_x, dim=1).to('cpu')
+        mask = torch.ones_like(probs_x).scatter_(1, targets_x.view(-1, 1).long(), 0).to('cpu')
         probs_x = probs_x * mask
         Lsoft = torch.mean((probs_x - softlabel_x)**2)
         return Lsoft
@@ -19,7 +19,7 @@ class SoftLoss_normal(object):
         # softlabel_x: list, each element size like output_x
         # it is the normal KD loss, used only in debug 
         print('The normal KD loss, used only in debug ')
-        probs_x = torch.softmax(outputs_x, dim=1).cuda()
+        probs_x = torch.softmax(outputs_x, dim=1).to('cpu')
         kd_loss = [torch.mean((probs_x - aux_label)**2) for aux_label in softlabel_x]
         kd_loss = sum(kd_loss) / len(softlabel_x)
         

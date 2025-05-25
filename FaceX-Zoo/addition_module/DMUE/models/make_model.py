@@ -151,7 +151,7 @@ class Backbone(nn.Module):
             
             # convert label into one-hot vector 
             label = label.unsqueeze(1)
-            one_hot = torch.zeros(label.shape[0], self.num_classes).cuda().scatter_(1, label, 1)
+            one_hot = torch.zeros(label.shape[0], self.num_classes).to('cpu').scatter_(1, label, 1)
             # cal mean according to different classes
             cos_matrixs = [cos_similarity[:, ind[:, 0]] for ind in inds_softlabel] # may be change by torch.Tensor.indexadd(dim, index, tensor)
             cos_matrixs_mean = [torch.mean(cos_m, dim=1, keepdim=True) for cos_m in cos_matrixs]

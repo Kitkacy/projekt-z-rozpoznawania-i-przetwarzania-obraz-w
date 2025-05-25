@@ -128,7 +128,7 @@ def train(conf):
     teacher_model = FaceModel(teacher_backbone_factory, head_factory)
     state_dict = torch.load(args.pretrained_teacher)['state_dict']
     teacher_model.load_state_dict(state_dict)
-    teacher_model = torch.nn.DataParallel(teacher_model).cuda()
+    teacher_model = torch.nn.DataParallel(teacher_model).to('cpu')
 
     student_backbone_factory = BackboneFactory(conf.student_backbone_type, conf.student_backbone_conf_file)
     student_model = FaceModel(student_backbone_factory, head_factory)
@@ -137,7 +137,7 @@ def train(conf):
         ori_epoch = torch.load(args.pretrain_model)['epoch'] + 1
         state_dict = torch.load(args.pretrain_model)['state_dict']
         student_model.load_state_dict(state_dict)
-    student_model = torch.nn.DataParallel(student_model).cuda()
+    student_model = torch.nn.DataParallel(student_model).to('cpu')
     parameters = [p for p in student_model.parameters() if p.requires_grad]
     optimizer = optim.SGD(parameters, lr = conf.lr, 
                           momentum = conf.momentum, weight_decay = 1e-4)

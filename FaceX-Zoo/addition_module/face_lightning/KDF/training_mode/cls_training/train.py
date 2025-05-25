@@ -116,7 +116,7 @@ def train(conf):
         ori_epoch = torch.load(args.pretrain_model)['epoch'] + 1
         state_dict = torch.load(args.pretrain_model)['state_dict']
         model.load_state_dict(state_dict)
-    model = torch.nn.DataParallel(model).cuda()
+    model = torch.nn.DataParallel(model).to('cpu')
     parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer = optim.SGD(parameters, lr = conf.lr, 
                           momentum = conf.momentum, weight_decay = 1e-4)

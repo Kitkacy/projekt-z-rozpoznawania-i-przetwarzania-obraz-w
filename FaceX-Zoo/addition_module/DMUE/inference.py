@@ -29,11 +29,11 @@ def inference(model, img_path, transform, is_cuda=True):
     img = Image.open(img_path).convert('RGB')    
     img_tensor = transform(img).unsqueeze(0)
     if is_cuda:
-        img_tensor = img_tensor.cuda()
+        img_tensor = img_tensor.to('cpu')
     
     model.eval()
     if is_cuda:
-        model = model.cuda()
+        model = model.to('cpu')
 
     pred = model(img_tensor)
     prob = F.softmax(pred, dim=-1)

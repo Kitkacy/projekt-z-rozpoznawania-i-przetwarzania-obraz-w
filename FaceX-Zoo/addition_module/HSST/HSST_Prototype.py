@@ -76,7 +76,7 @@ class HSST_Prototype(Module):
         nir_g = F.normalize(nir_g)
         batch_size = nir_p.shape[0]
         label = (torch.LongTensor([range(batch_size)]) + self.index)
-        label = label.squeeze().cuda()
+        label = label.squeeze().to('cpu')
         nir_g = nir_g.detach()
         vis_g = vis_g.detach()
         output1 = self.compute_theta(nir_p, vis_g, label, batch_size)

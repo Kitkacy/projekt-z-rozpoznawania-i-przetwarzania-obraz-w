@@ -88,8 +88,8 @@ def main():
                            lr=args.lr)
 
     # criterion
-    criterion_type = torch.nn.CrossEntropyLoss().cuda()
-    criterionL2 = torch.nn.MSELoss().cuda()
+    criterion_type = torch.nn.CrossEntropyLoss().to('cpu')
+    criterionL2 = torch.nn.MSELoss().to('cpu')
 
     train_loader = torch.utils.data.DataLoader(
         GenDataset_s(img_root=args.img_root, list_file=args.train_list, attack_type=args.attack_type),
@@ -111,9 +111,9 @@ def main():
         for iteration, batch in enumerate(train_loader):
             data_time.update(time.time() - start_time)
 
-            img_nir = Variable(batch['0'].cuda())
-            img_vis = Variable(batch['1'].cuda())
-            label_spoof = batch['type'].cuda()
+            img_nir = Variable(batch['0'].to('cpu'))
+            img_vis = Variable(batch['1'].to('cpu'))
+            label_spoof = batch['type'].to('cpu')
 
             img = torch.cat((img_nir, img_vis), 1)
 
@@ -199,7 +199,7 @@ def main():
             noise = torch.zeros(args.batch_size, args.hdim).normal_(0, 1)
             noise_s = torch.zeros(args.batch_size, args.hdim).normal_(0, 1)
             noise = torch.cat((noise_s, noise, noise), dim=1)
-            noise = noise.cuda()
+            noise = noise.to('cpu')
 
             fake = netG(noise)
 

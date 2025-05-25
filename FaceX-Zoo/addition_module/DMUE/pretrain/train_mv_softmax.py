@@ -50,8 +50,8 @@ def get_lr(optimizer):
 
 def train_one_epoch(data_loader, model, optimizer, criteria, cur_epoch, loss_meter, args):
     for batch_idx, (images, labels, _) in enumerate(data_loader):
-        images = images.cuda()
-        labels = labels.cuda()
+        images = images.to('cpu')
+        labels = labels.to('cpu')
         labels = labels.squeeze()
         outputs = model.forward(images, labels)
         loss = criteria(outputs, labels)
@@ -90,8 +90,8 @@ def train(args):
         ori_epoch = torch.load(args.pretrain_model)['epoch'] + 1
         state_dict = torch.load(args.pretrain_model)['state_dict']
         model.load_state_dict(state_dict)
-    model = torch.nn.DataParallel(model).cuda()
-    criteria = torch.nn.CrossEntropyLoss().cuda()
+    model = torch.nn.DataParallel(model).to('cpu')
+    criteria = torch.nn.CrossEntropyLoss().to('cpu')
     parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer = optim.SGD(parameters, lr=args.lr, momentum=args.momentum, weight_decay=1e-4)
     lr_schedule = optim.lr_scheduler.MultiStepLR(optimizer, milestones=args.milestones, gamma=0.1)

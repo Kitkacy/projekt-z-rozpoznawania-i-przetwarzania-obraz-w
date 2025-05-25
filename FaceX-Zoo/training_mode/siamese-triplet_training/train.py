@@ -102,7 +102,7 @@ def train(conf):
     model = backbone_factory.get_backbone()
     if conf.resume:
         model.load_state_dict(torch.load(args.pretrain_model))
-    model = torch.nn.DataParallel(model).cuda()
+    model = torch.nn.DataParallel(model).to('cpu')
     parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer = optim.SGD(parameters, lr = conf.lr, 
                           momentum = conf.momentum, weight_decay = 1e-4)

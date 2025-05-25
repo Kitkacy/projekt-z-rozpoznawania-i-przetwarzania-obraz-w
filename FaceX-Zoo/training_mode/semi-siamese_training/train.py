@@ -46,9 +46,9 @@ def train_BN(m):
 def shuffle_BN(batch_size):
     """ShuffleBN for batch, the same as MoCo https://arxiv.org/abs/1911.05722 #######
     """
-    shuffle_ids = torch.randperm(batch_size).long().cuda()
-    reshuffle_ids = torch.zeros(batch_size).long().cuda()
-    reshuffle_ids.index_copy_(0, shuffle_ids, torch.arange(batch_size).long().cuda())
+    shuffle_ids = torch.randperm(batch_size).long().to('cpu')
+    reshuffle_ids = torch.zeros(batch_size).long().to('cpu')
+    reshuffle_ids.index_copy_(0, shuffle_ids, torch.arange(batch_size).long().to('cpu'))
     return shuffle_ids, reshuffle_ids
     
 def train_one_epoch(data_loader, probe_net, gallery_net, prototype, optimizer, 
@@ -58,8 +58,8 @@ def train_one_epoch(data_loader, probe_net, gallery_net, prototype, optimizer,
     for batch_idx, (images1, images2, id_indexes) in enumerate(data_loader):
         batch_size = images1.size(0)
         global_batch_idx = cur_epoch * len(data_loader) + batch_idx
-        images1 = images1.cuda()
-        images2 = images2.cuda()
+        images1 = images1.to('cpu')
+        images2 = images2.to('cpu')
         # set inputs as probe or gallery 
         shuffle_ids, reshuffle_ids = shuffle_BN(batch_size)
         images1_probe = probe_net(images1)
@@ -118,6 +118,7 @@ def train(conf):
     exclude_id_set = set()
     loss_meter = AverageMeter()
     for epoch in range(conf.epoches):
+        logger.info(f"=== Epoch {epoch+1}/{conf.epoches} ===")
         data_loader = DataLoader(
             ImageDataset_SST(conf.data_root, conf.train_file, exclude_id_set), 
             conf.batch_size, True, num_workers = 4, drop_last = True)

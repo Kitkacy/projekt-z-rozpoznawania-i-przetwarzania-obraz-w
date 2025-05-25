@@ -485,8 +485,8 @@ if __name__ == '__main__':
 	x = torch.rand((2,3,112,112))
 	net = TF_NAS_A(7, 7, 512, drop_ratio=0.0)
 
-	x = x.cuda()
-	net = net.cuda()
+	x = x.to('cpu')
+	net = net.to('cpu')
 
 	out = net(x)
 	print(out.size())

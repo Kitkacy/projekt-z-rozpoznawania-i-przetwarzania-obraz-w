@@ -39,7 +39,7 @@ class NPCFace(Module):
         sin_theta = torch.sqrt(1.0 - torch.pow(gt, 2))
         cos_theta_m = gt * self.cos_m - sin_theta * self.sin_m
         with torch.no_grad():
-            hard_mask = (cos_theta > cos_theta_m).type(torch.FloatTensor).cuda()
+            hard_mask = (cos_theta > cos_theta_m).type(torch.FloatTensor).to('cpu')
             hard_mask.scatter_(1, label.data.view(-1, 1), 0)
             hard_cos = torch.where(hard_mask > 0, cos_theta, torch.zeros_like(cos_theta))
             sum_hard_cos = torch.sum(hard_cos,dim=1).view(-1, 1)

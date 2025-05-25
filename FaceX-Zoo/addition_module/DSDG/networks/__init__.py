@@ -10,10 +10,10 @@ def define_G(hdim=256, attack_type=4):
     netE_vis = Encoder(hdim=hdim)
     netG = Decoder_s(hdim=hdim)
 
-    netE_nir = torch.nn.DataParallel(netE_nir).cuda()
-    netE_vis = torch.nn.DataParallel(netE_vis).cuda()
-    netG = torch.nn.DataParallel(netG).cuda()
-    netCls = torch.nn.DataParallel(netCls).cuda()
+    netE_nir = torch.nn.DataParallel(netE_nir).to('cpu')
+    netE_vis = torch.nn.DataParallel(netE_vis).to('cpu')
+    netG = torch.nn.DataParallel(netG).to('cpu')
+    netCls = torch.nn.DataParallel(netCls).to('cpu')
 
     return netE_nir, netE_vis, netG, netCls
 
@@ -21,12 +21,12 @@ def define_G(hdim=256, attack_type=4):
 # define identity preserving && feature extraction net
 def define_IP(is_train=False):
     netIP = network_29layers_v2(resblock, [1, 2, 3, 4], is_train)
-    netIP = torch.nn.DataParallel(netIP).cuda()
+    netIP = torch.nn.DataParallel(netIP).to('cpu')
     return netIP
 
 
 # define recognition network
 def LightCNN_29v2(num_classes=10000, is_train=True):
     net = network_29layers_v2(resblock, [1, 2, 3, 4], is_train, num_classes=num_classes)
-    net = torch.nn.DataParallel(net).cuda()
+    net = torch.nn.DataParallel(net).to('cpu')
     return net

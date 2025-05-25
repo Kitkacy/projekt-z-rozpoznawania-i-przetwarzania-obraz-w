@@ -26,11 +26,18 @@ class CommonTestDataset(Dataset):
     def __init__(self, image_root, image_list_file, crop_eye=False):
         self.image_root = image_root
         self.image_list = []
-        image_list_buf = open(image_list_file)
-        line = image_list_buf.readline().strip()
-        while line:
-            self.image_list.append(line)
-            line = image_list_buf.readline().strip()
+        
+        with open(image_list_file) as f:
+            for line in f:
+                line = line.strip().replace('\\', '/')
+                if not line:
+                    continue
+                
+                filename = os.path.basename(line)  # np. 10032527@N_0000.jpg
+                folder_name = os.path.basename(self.image_root)  # np. 10032527@N
+                print("line[0:10]:", line[0:10], "line[11:21]" + line[11:21])  # Debugging output
+                if line[0:10] == line[11:21]:
+                    self.image_list.append(line)
         self.mean = 127.5
         self.std = 128.0
         self.crop_eye = crop_eye

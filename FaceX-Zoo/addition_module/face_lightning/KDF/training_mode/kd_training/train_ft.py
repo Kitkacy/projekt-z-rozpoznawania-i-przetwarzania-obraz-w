@@ -142,7 +142,7 @@ def train(conf):
     teacher_model = FaceModel(teacher_backbone_factory, head_factory)
     state_dict = torch.load(args.pretrained_teacher)['state_dict']
     teacher_model.load_state_dict(state_dict)
-    teacher_model = torch.nn.DataParallel(teacher_model).cuda()
+    teacher_model = torch.nn.DataParallel(teacher_model).to('cpu')
 
     # define and train the paraphraser
     paraphraser = define_paraphraser(512, k=0.5)
@@ -150,7 +150,7 @@ def train(conf):
                                      lr = args.lr * 0.1, 
                                      momentum = args.momentum, 
                                      weight_decay = 1e-4)
-    criterionPara = torch.nn.MSELoss().cuda()
+    criterionPara = torch.nn.MSELoss().to('cpu')
     logger.info('The first stage, training the paraphraser......')
     train_para(data_loader, teacher_model, paraphraser, optimizer_para, criterionPara, 2, conf)
     paraphraser.eval()
@@ -171,7 +171,7 @@ def train(conf):
         ori_epoch = torch.load(args.pretrain_model)['epoch'] + 1
         state_dict = torch.load(args.pretrain_model)['state_dict']
         student_model.load_state_dict(state_dict)
-    student_model = torch.nn.DataParallel(student_model).cuda()
+    student_model = torch.nn.DataParallel(student_model).to('cpu')
     parameters = [p for p in student_model.parameters() if p.requires_grad]
     optimizer = optim.SGD(chain(parameters, translator.parameters()), lr = conf.lr, 
                           momentum = conf.momentum, weight_decay = 1e-4)

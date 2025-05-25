@@ -47,7 +47,7 @@ def main():
         noise = torch.zeros(100, args.hdim).normal_(0, 1)
         noise_s = torch.zeros(100, args.hdim).normal_(0, 1)
         noise = torch.cat((noise_s, noise, noise), dim=1)
-        noise = noise.cuda()
+        noise = noise.to('cpu')
 
         fake = netG(noise)
 

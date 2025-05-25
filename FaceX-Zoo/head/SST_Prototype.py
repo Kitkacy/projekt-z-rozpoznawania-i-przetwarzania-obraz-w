@@ -68,7 +68,7 @@ class SST_Prototype(Module):
         g1 = F.normalize(g1)
         batch_size = p1.shape[0]
         label = (torch.LongTensor([range(batch_size)]) + self.index)
-        label = label.squeeze().cuda()
+        label = label.squeeze().to('cpu')
         g1 = g1.detach()
         g2 = g2.detach()
         output1 = self.compute_theta(p1, g2, label, batch_size)

@@ -61,7 +61,7 @@ def get_lmd(model_ft, img):
         这里输入的取值范围在0-1
     
         '''
-        inputs = torch.from_numpy(img).cuda()
+        inputs = torch.from_numpy(img).to('cpu')
         outputs, boundary_channels = model_ft(inputs)
 
         pred_heatmap = outputs[-1][:, :-1, :, :][0].detach().cpu()  # （98， 64， 64）

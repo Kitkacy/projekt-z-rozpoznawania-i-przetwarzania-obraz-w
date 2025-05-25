@@ -56,7 +56,7 @@ class PRN:
         cropped_image = np.transpose(cropped_image[np.newaxis, :,:,:], (0, 3, 1, 2)).astype(np.float32)
         cropped_image = torch.from_numpy(cropped_image)
         if torch.cuda.is_available():
-            cropped_image = cropped_image.cuda()
+            cropped_image = cropped_image.to('cpu')
         with torch.no_grad():
             cropped_pos = self.net(cropped_image)
         cropped_pos = cropped_pos.cpu().detach().numpy()

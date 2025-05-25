@@ -49,7 +49,7 @@ def test():
     model = CDCN_u(basic_conv=Conv2d_cd, theta=0.7)
     # model = ResNet18_u()
 
-    model = model.cuda()
+    model = model.to('cpu')
     model = torch.nn.DataParallel(model)
     model.load_state_dict(torch.load('./DUM/checkpoint/CDCN_U_P1.pkl', map_location='cpu'))
 
@@ -74,8 +74,8 @@ def test():
 
             for i, sample_batched in enumerate(dataloader_val):
                 # get the inputs
-                inputs, spoof_label = sample_batched['image_x'].cuda(), sample_batched['spoofing_label'].cuda()
-                val_maps = sample_batched['val_map_x'].cuda()  # binary map from PRNet
+                inputs, spoof_label = sample_batched['image_x'].to('cpu'), sample_batched['spoofing_label'].to('cpu')
+                val_maps = sample_batched['val_map_x'].to('cpu')  # binary map from PRNet
 
                 optimizer.zero_grad()
 
@@ -107,8 +107,8 @@ def test():
 
             for i, sample_batched in enumerate(dataloader_test):
                 # get the inputs
-                inputs, spoof_label = sample_batched['image_x'].cuda(), sample_batched['spoofing_label'].cuda()
-                test_maps = sample_batched['val_map_x'].cuda()
+                inputs, spoof_label = sample_batched['image_x'].to('cpu'), sample_batched['spoofing_label'].to('cpu')
+                test_maps = sample_batched['val_map_x'].to('cpu')
 
                 optimizer.zero_grad()
 

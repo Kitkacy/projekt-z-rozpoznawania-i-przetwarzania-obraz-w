@@ -46,9 +46,9 @@ def train_BN(m):
 def shuffle_BN(batch_size):
     """ShuffleBN for batch, the same as MoCo https://arxiv.org/abs/1911.05722 #######
     """
-    shuffle_ids = torch.randperm(batch_size).long().cuda()
-    reshuffle_ids = torch.zeros(batch_size).long().cuda()
-    reshuffle_ids.index_copy_(0, shuffle_ids, torch.arange(batch_size).long().cuda())
+    shuffle_ids = torch.randperm(batch_size).long().to('cpu')
+    reshuffle_ids = torch.zeros(batch_size).long().to('cpu')
+    reshuffle_ids.index_copy_(0, shuffle_ids, torch.arange(batch_size).long().to('cpu'))
     return shuffle_ids, reshuffle_ids
     
 def train_one_epoch(data_loader, probe_net, gallery_net, prototype, optimizer, 
@@ -58,8 +58,8 @@ def train_one_epoch(data_loader, probe_net, gallery_net, prototype, optimizer,
     for batch_idx, (nir_img, vis_img, id_indexes) in enumerate(data_loader):
         batch_size = nir_img.size(0)
         global_batch_idx = cur_epoch * len(data_loader) + batch_idx
-        nir_img = nir_img.cuda()
-        vis_img = vis_img.cuda()
+        nir_img = nir_img.to('cpu')
+        vis_img = vis_img.to('cpu')
         # set inputs as probe or gallery 
         shuffle_ids, reshuffle_ids = shuffle_BN(batch_size)
         nir_img_probe = probe_net(nir_img)

@@ -35,6 +35,6 @@ if __name__ == '__main__':
         new_pretrained_dict[k] = pretrained_dict['feat_net.'+k]
     model_dict.update(new_pretrained_dict)
     model.load_state_dict(model_dict)
-    model = torch.nn.DataParallel(model).cuda()
+    model = torch.nn.DataParallel(model).to('cpu')
     extractor = CommonExtractor('cpu')
     extractor.extract_offline(feats_root, model, data_loader)

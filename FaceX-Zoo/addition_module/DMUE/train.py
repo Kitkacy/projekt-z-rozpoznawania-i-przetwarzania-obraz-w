@@ -49,14 +49,14 @@ def train():
     else:
         model = make_model(cfg)
 
-    model.cuda()
+    model.to('cpu')
     model = torch.nn.DataParallel(model)
 
     optimizer = torch.optim.Adam([{'params': model.module.base.parameters(), 'lr': cfg.get_lr(0)[0]},
                                   {'params': model.module.classifiers.parameters(), 'lr': cfg.get_lr(0)[1]}],
                                  weight_decay=cfg.weight_decay)
     
-    celoss = nn.CrossEntropyLoss().cuda()
+    celoss = nn.CrossEntropyLoss().to('cpu')
     softloss = SoftLoss()
     sp_kd_loss = SP_KD_Loss()
     criterions = [celoss, softloss, sp_kd_loss]
@@ -89,7 +89,7 @@ def train_one_epoch(train_loader, val_loader, model, criterions, optimizer, epoc
         good_batch = check_batch(label, cfg.num_classes)
         if not good_batch:
             continue
-        img, label = img.cuda(), label.cuda()
+        img, label = img.to('cpu'), label.to('cpu')
         
         x_final, output_x_list, targets, softlabel_list, G_matrixs, G_main_matrixs, score, atten_x_final = model(img, label, training_phase)
         
@@ -105,7 +105,7 @@ def train_one_epoch(train_loader, val_loader, model, criterions, optimizer, epoc
             _targets = torch.zeros([_h, _w+1]).float()
             _targets[:, 0:c], _targets[:, c + 1:] = targets_x[:, 0:c], targets_x[:, c:]
             ind = (label == c).nonzero()
-            softlabel[ind[:, 0]] = _targets.cuda() # bs x num_cls
+            softlabel[ind[:, 0]] = _targets.to('cpu') # bs x num_cls
         
         softLoss = criterions[1](x_final, label, softlabel)
         aux_loss = [criterions[0](_pred, _label) for _pred, _label in zip(output_x_list, targets)] # auxiliary branch  
@@ -139,7 +139,7 @@ def test_worker(val_loader, model):
     Pred, Label = [], []
     for idx, batch in enumerate(val_loader, 1):
         img, label = batch
-        pred, output_x_list, targets, softlabel_list = model(img.cuda(), label, 'normal')
+        pred, output_x_list, targets, softlabel_list = model(img.to('cpu'), label, 'normal')
 
         for i in range(pred.shape[0]):
             x = pred[i].data.cpu().numpy()

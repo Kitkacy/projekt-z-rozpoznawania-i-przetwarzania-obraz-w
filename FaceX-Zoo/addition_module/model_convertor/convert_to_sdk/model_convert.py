@@ -21,5 +21,5 @@ for k in model_dict:
 
 model_dict.update(new_pretrained_dict)
 model.load_state_dict(model_dict)
-model.cuda()
+model.to('cpu')
 torch.save(model, 'face_recognition_mv.pkl')

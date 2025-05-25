@@ -32,6 +32,12 @@ class LFWEvaluator(object):
 
     def test(self, model):
         image_name2feature = self.feature_extractor.extract_online(model, self.data_loader)
+        
+        print(">>> DEBUG: Klucze w image_name2feature:")
+        for key in image_name2feature.keys():
+            print(repr(key))  # pokaże dokładnie znaki, np. "\" vs "/"
+        print(">>> DEBUG: --- KONIEC LISTY KLUCZY ---", flush=True)
+
         mean, std = self.test_one_model(self.pair_list, image_name2feature)
         return mean, std
 

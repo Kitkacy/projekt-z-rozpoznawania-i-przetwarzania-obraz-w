@@ -55,8 +55,8 @@ class OnlineContrastiveLoss(nn.Module):
         embeddings = F.normalize(embeddings)
         positive_pairs, negative_pairs = self.pair_selector.get_pairs(embeddings, target)
         if embeddings.is_cuda:
-            positive_pairs = positive_pairs.cuda()
-            negative_pairs = negative_pairs.cuda()
+            positive_pairs = positive_pairs.to('cpu')
+            negative_pairs = negative_pairs.to('cpu')
         positive_loss = (embeddings[positive_pairs[:, 0]] - embeddings[positive_pairs[:, 1]]).pow(2).sum(1)
         negative_loss = F.relu(
             self.margin - (embeddings[negative_pairs[:, 0]] - embeddings[negative_pairs[:, 1]]).pow(2).sum(
@@ -83,7 +83,7 @@ class OnlineTripletLoss(nn.Module):
         triplets = self.triplet_selector.get_triplets(embeddings, target)
 
         if embeddings.is_cuda:
-            triplets = triplets.cuda()
+            triplets = triplets.to('cpu')
 
         ap_distances = (embeddings[triplets[:, 0]] - embeddings[triplets[:, 1]]).pow(2).sum(1)  # .pow(.5)
         an_distances = (embeddings[triplets[:, 0]] - embeddings[triplets[:, 2]]).pow(2).sum(1)  # .pow(.5)

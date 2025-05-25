@@ -4,7 +4,7 @@ import torch.nn as nn
 def define_paraphraser(in_channels_t, k, use_bn=True, cuda=True):
 	net = paraphraser(in_channels_t, k, use_bn)
 	if cuda:
-		net = torch.nn.DataParallel(net).cuda()
+		net = torch.nn.DataParallel(net).to('cpu')
 	else:
 		net = torch.nn.DataParallel(net)
 	return net
@@ -53,7 +53,7 @@ class paraphraser(nn.Module):
 def define_translator(in_channels_s, in_channels_t, k, use_bn=True, cuda=True):
 	net = translator(in_channels_s, in_channels_t, k, use_bn)
 	if cuda:
-		net = torch.nn.DataParallel(net).cuda()
+		net = torch.nn.DataParallel(net).to('cpu')
 	else:
 		net = torch.nn.DataParallel(net)
 	return net
