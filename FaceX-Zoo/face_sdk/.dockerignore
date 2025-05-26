@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Logs
+Logs/
+*.log
+
+# Runtime data
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Environment
+.env
+venv/
+env/
+ENV/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Face image directory (will be mounted as volume)
+Twarze/*
+
+# Keep any README files
+!Twarze/README.md
