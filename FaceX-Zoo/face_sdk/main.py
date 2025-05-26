@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# filepath: /home/wicek/Documents/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/face_sdk/main.py
 import cv2
 import os
 import numpy as np
@@ -109,7 +111,7 @@ def load_faces():
 
 def option_1_take_photo_gui():
     cap = cv2.VideoCapture(0)
-    messagebox.showinfo("Instrukcja", "Zrób zdjęcie wciskając 'q'.")
+    messagebox.showinfo("Instrukcja", "Zrób zdjęcie wciskając 'Q'.")
     while True:
         ret, frame = cap.read()
         if not ret: break
@@ -133,7 +135,7 @@ def option_2_record_video_gui():
     filepath = os.path.join(faces_dir, filename + ".mp4")
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(filepath, fourcc, 20.0, (640,480))
-    messagebox.showinfo("Nagrywanie", "Nagrywanie... Naciśnij 'q', by zakończyć.")
+    messagebox.showinfo("Nagrywanie", "Nagrywanie... Naciśnij 'Q', by zakończyć.")
     while True:
         ret, frame = cap.read()
         if not ret: break
@@ -152,9 +154,12 @@ def option_3_live_recognition_gui():
     cap = cv2.VideoCapture(0)
     info_text = f"{len(reference_features)} referencyjne twarze zaladowane"
     
-    # Zmienne do śledzenia detekcji twarzy przez 5 sekund
-    face_tracking = {}  # {face_id: {'start_time': timestamp, 'last_name': name, 'last_score': score}}
+    # Zmienne do śledzenia detekcji twarzy
+    face_tracking = {}  # {face_id: {'last_name': name, 'last_score': score}}
     face_id_counter = 0
+    
+    # Zmienna do śledzenia czy w bieżącej klatce należy logować twarze
+    log_current_frame = False
     
     while True:
         ret, frame = cap.read()
@@ -166,7 +171,7 @@ def option_3_live_recognition_gui():
         dets = app_det.detect(frame)
         
         # Informacja o logowaniu
-        log_status = "Logowanie: włączone" if enable_logging else "Logowanie: wyłączone"
+        log_status = "Logowanie: Tak" if enable_logging else "Logowanie: Nie"
         cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
         cv2.putText(frame, log_status, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
         
@@ -206,7 +211,7 @@ def option_3_live_recognition_gui():
                     # Przygotuj dane do logowania
                     name_to_log = "Nieznane"
                 
-                # Śledzenie twarzy dla logowania po 5 sekundach
+                # Śledzenie twarzy dla logowania przy naciśnięciu klawisza L
                 face_center = ((x1 + x2) // 2, (y1 + y2) // 2)
                 face_found = False
                 face_id = None
@@ -225,8 +230,8 @@ def option_3_live_recognition_gui():
                 if not face_found:
                     face_id = face_id_counter
                     face_id_counter += 1
-                    face_tracking[face_id] = {'start_time': current_time, 'last_name': name_to_log, 
-                                              'last_score': best_score, 'center': face_center}
+                    face_tracking[face_id] = {'last_name': name_to_log, 
+                                             'last_score': best_score, 'center': face_center}
                 else:
                     # Aktualizuj dane dla istniejącej twarzy
                     face_tracking[face_id]['last_name'] = name_to_log
@@ -236,21 +241,18 @@ def option_3_live_recognition_gui():
                 # Dodaj do listy aktywnych twarzy
                 active_faces.append(face_id)
                 
-                # Sprawdź, czy minęło 5 sekund od pierwszego wykrycia tej twarzy
-                if enable_logging and face_id in face_tracking:
-                    time_elapsed = current_time - face_tracking[face_id]['start_time']
-                    if time_elapsed >= 5.0 and not face_tracking[face_id].get('logged', False):
-                        # Zapisz log po 5 sekundach śledzenia tej samej twarzy
-                        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        log_recognition_result(
-                            face_tracking[face_id]['last_name'],
-                            face_tracking[face_id]['last_score'],
-                            timestamp
-                        )
-                        face_tracking[face_id]['logged'] = True
-                        # Dodaj informację o zalogowaniu na ekranie
-                        cv2.putText(frame, "Zalogowano!", (x1, y2 + 20), 
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
+                # Loguj twarz, jeśli naciśnięto klawisz L i logowanie jest włączone
+                if enable_logging and log_current_frame and face_id in face_tracking:
+                    # Zapisz log dla tej twarzy
+                    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    log_recognition_result(
+                        face_tracking[face_id]['last_name'],
+                        face_tracking[face_id]['last_score'],
+                        timestamp
+                    )
+                    # Dodaj informację o zalogowaniu na ekranie
+                    cv2.putText(frame, "Zalogowano!", (x1, y2 + 20), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
                 
                 # Wyświetl etykietę z rozpoznaną twarzą
                 try:
@@ -296,11 +298,23 @@ def option_3_live_recognition_gui():
         # Usuń twarze zaznaczone do usunięcia
         for face_id in faces_to_remove:
             del face_tracking[face_id]
-        
-        cv2.putText(frame, "Nacisnij 'q' aby zakonczyc", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+
+        cv2.putText(frame, "Nacisnij 'L' aby zapisac wynik", (10, frame.shape[0] - 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(frame, "Nacisnij 'Q' aby zakonczyc", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.imshow('Rozpoznanie twarzy', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        
+        # Sprawdź czy naciśnięto klawisz
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
             break
+        elif key == ord('l') or key == ord('L'):
+            if enable_logging:
+                log_current_frame = True
+                print("Zapisywanie logów dla bieżącej klatki")
+            else:
+                messagebox.showinfo("Info", "Logowanie jest wyłączone. Włącz je w menu głównym.")
+        else:
+            log_current_frame = False  # Reset flagi po każdej klatce, która nie ma 'L'
     cap.release()
     cv2.destroyAllWindows()
 
@@ -361,7 +375,7 @@ def option_4_video_file_gui():
                             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
                     except Exception:
                         cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-        cv2.putText(frame, "Nacisnij 'q' aby zakonczyc", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(frame, "Nacisnij 'Q' aby zakonczyc", (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.imshow('Rozpoznawanie twarzy', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
