@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# filepath: /home/wicek/Documents/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/face_sdk/main.py
+# filepath: /home/vincenty/Documents/GitHub/projekt-z-rozpoznawania-i-przetwarzania-obraz-w/FaceX-Zoo/face_sdk/main.py
 import cv2
 import os
 import numpy as np
