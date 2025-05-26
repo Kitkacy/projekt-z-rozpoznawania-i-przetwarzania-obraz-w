@@ -1,48 +1,76 @@
-INFO 2025-05-26 20:27:55 main.py: 77 Przetwarzanie obrazu referencyjnego: kozhin.jpg
-INFO 2025-05-26 20:27:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: kozhin.jpg
-INFO 2025-05-26 20:27:55 main.py: 107 Zaladowano 11 twarzy do porownania
-INFO 2025-05-26 20:28:06 main.py: 393 Włączono zapisywanie logów rozpoznawania
-INFO 2025-05-26 20:28:08 main.py: 72 Znaleziono 11 obrazy referencyjne
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: Wojtek.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: Wojtek.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: leon.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: leon.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: Hubert.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: Hubert.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: aziz.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: aziz.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: Ania.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: Ania.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: Wicek.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: Wicek.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: Alberto.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: Alberto.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: italia.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: italia.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: stephen ngugi.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: stephen ngugi.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: James.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: James.jpg
-INFO 2025-05-26 20:28:08 main.py: 77 Przetwarzanie obrazu referencyjnego: kozhin.jpg
-INFO 2025-05-26 20:28:08 main.py: 99 Pomyślnie załadowano referencyjną twarz: kozhin.jpg
-INFO 2025-05-26 20:28:08 main.py: 107 Zaladowano 11 twarzy do porownania
-INFO 2025-05-26 20:28:12 main.py: 64 Zapisano log rozpoznania: stephen ngugi, 0.9326, 2025-05-26 20:28:12
-INFO 2025-05-26 20:28:22 main.py: 64 Zapisano log rozpoznania: stephen ngugi, 0.7338, 2025-05-26 20:28:22
-INFO 2025-05-26 20:28:36 main.py: 64 Zapisano log rozpoznania: stephen ngugi, 0.5859, 2025-05-26 20:28:36
-INFO 2025-05-26 20:28:45 main.py: 64 Zapisano log rozpoznania: stephen ngugi, 0.6420, 2025-05-26 20:28:45
-INFO 2025-05-26 20:28:55 main.py: 64 Zapisano log rozpoznania: stephen ngugi, 0.7139, 2025-05-26 20:28:55
-INFO 2025-05-26 21:59:37 FaceDetModelLoader.py: 16 Start to analyze the face detection model, model path: models, model category: face_detection，model name: face_detection_1.0
-INFO 2025-05-26 21:59:37 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
-INFO 2025-05-26 21:59:37 FaceDetModelLoader.py: 35 Successfully loaded the face detection model!
-INFO 2025-05-26 21:59:37 FaceAlignModelLoader.py: 16 Start to analyze the face landmark model, model path: models, model category: face_alignment，model name: face_alignment_1.0
-INFO 2025-05-26 21:59:37 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
-INFO 2025-05-26 21:59:37 FaceAlignModelLoader.py: 30 Successfully loaded the face landmark model!
-INFO 2025-05-26 21:59:37 FaceRecModelLoader.py: 16 Start to analyze the face recognition model, model path: models, model category: face_recognition，model name: face_recognition_1.0
-INFO 2025-05-26 21:59:37 BaseModelLoader.py: 34 Successfully parsed the model configuration file meta.json!
-INFO 2025-05-26 21:59:37 FaceRecModelLoader.py: 31 Successfully loaded the face recognition model!
-INFO 2025-05-26 21:59:37 main.py: 39 Folder z referencyjnymi twarzami: Twarze
-INFO 2025-05-26 21:59:37 main.py: 40 Folder z logami rozpoznania: Logs
-DEBUG 2025-05-26 21:59:38 PngImagePlugin.py: 200 STREAM b'IHDR' 16 13
-DEBUG 2025-05-26 21:59:38 PngImagePlugin.py: 200 STREAM b'pHYs' 41 9
-DEBUG 2025-05-26 21:59:38 PngImagePlugin.py: 200 STREAM b'iTXt' 62 1334
-DEBUG 2025-05-26 21:59:38 PngImagePlugin.py: 200 STREAM b'IDAT' 1408 52501
+INFO 2025-05-27 00:48:07 main.py: 99 Pomyślnie załadowano referencyjną twarz: italia.jpg
+INFO 2025-05-27 00:48:07 main.py: 77 Przetwarzanie obrazu referencyjnego: Ania.jpg
+INFO 2025-05-27 00:48:07 main.py: 99 Pomyślnie załadowano referencyjną twarz: Ania.jpg
+INFO 2025-05-27 00:48:07 main.py: 107 Zaladowano 11 twarzy do porownania
+INFO 2025-05-27 00:48:11 main.py: 72 Znaleziono 11 obrazy referencyjne
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: leon.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: leon.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: aziz.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: aziz.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: test.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: test.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: Alberto.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: Alberto.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: Wicek.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: Wicek.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: Hubert.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: Hubert.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: kozhin.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: kozhin.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: James.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: James.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: stephen ngugi.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: stephen ngugi.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: italia.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: italia.jpg
+INFO 2025-05-27 00:48:11 main.py: 77 Przetwarzanie obrazu referencyjnego: Ania.jpg
+INFO 2025-05-27 00:48:11 main.py: 99 Pomyślnie załadowano referencyjną twarz: Ania.jpg
+INFO 2025-05-27 00:48:11 main.py: 107 Zaladowano 11 twarzy do porownania
+INFO 2025-05-27 00:48:39 main.py: 72 Znaleziono 11 obrazy referencyjne
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: leon.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: leon.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: aziz.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: aziz.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: test.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: test.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: Alberto.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: Alberto.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: Wicek.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: Wicek.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: Hubert.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: Hubert.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: kozhin.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: kozhin.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: James.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: James.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: stephen ngugi.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: stephen ngugi.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: italia.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: italia.jpg
+INFO 2025-05-27 00:48:39 main.py: 77 Przetwarzanie obrazu referencyjnego: Ania.jpg
+INFO 2025-05-27 00:48:39 main.py: 99 Pomyślnie załadowano referencyjną twarz: Ania.jpg
+INFO 2025-05-27 00:48:39 main.py: 107 Zaladowano 11 twarzy do porownania
+INFO 2025-05-27 00:48:55 main.py: 72 Znaleziono 11 obrazy referencyjne
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: leon.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: leon.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: aziz.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: aziz.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: test.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: test.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: Alberto.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: Alberto.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: Wicek.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: Wicek.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: Hubert.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: Hubert.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: kozhin.jpg
+INFO 2025-05-27 00:48:55 main.py: 99 Pomyślnie załadowano referencyjną twarz: kozhin.jpg
+INFO 2025-05-27 00:48:55 main.py: 77 Przetwarzanie obrazu referencyjnego: James.jpg
+INFO 2025-05-27 00:48:56 main.py: 99 Pomyślnie załadowano referencyjną twarz: James.jpg
+INFO 2025-05-27 00:48:56 main.py: 77 Przetwarzanie obrazu referencyjnego: stephen ngugi.jpg
+INFO 2025-05-27 00:48:56 main.py: 99 Pomyślnie załadowano referencyjną twarz: stephen ngugi.jpg
+INFO 2025-05-27 00:48:56 main.py: 77 Przetwarzanie obrazu referencyjnego: italia.jpg
+INFO 2025-05-27 00:48:56 main.py: 99 Pomyślnie załadowano referencyjną twarz: italia.jpg
+INFO 2025-05-27 00:48:56 main.py: 77 Przetwarzanie obrazu referencyjnego: Ania.jpg
+INFO 2025-05-27 00:48:56 main.py: 99 Pomyślnie załadowano referencyjną twarz: Ania.jpg
+INFO 2025-05-27 00:48:56 main.py: 107 Zaladowano 11 twarzy do porownania

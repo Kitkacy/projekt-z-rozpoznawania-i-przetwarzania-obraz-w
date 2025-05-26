@@ -10,6 +10,11 @@ echo "============================================"
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 cd "$SCRIPT_DIR"
 
+# Ask for username
+read -p "Enter your username: " USERNAME
+HOME_DIR="/home/$USERNAME"
+echo "Using home directory: $HOME_DIR"
+
 # Check Python version
 python_version=$(python3 --version 2>&1)
 echo "Detected Python: $python_version"
@@ -66,24 +71,33 @@ source venv/bin/activate
 EOL
 chmod +x "$SCRIPT_DIR/run_app.sh"
 
-# Update desktop file to use the activation script
-sed -i "s|Exec=.*|Exec=$SCRIPT_DIR/run_app.sh|g" "$SCRIPT_DIR/FaceRecognition.desktop"
+# Create or update the desktop file with the correct paths
+cat > "$SCRIPT_DIR/FaceRecognition.desktop" << EOL
+[Desktop Entry]
+Type=Application
+Name=FaceX-Zoo Recognition
+Comment=Face Recognition Application
+Exec=$SCRIPT_DIR/run_app.sh
+Icon=$SCRIPT_DIR/icon.png
+Terminal=false
+Categories=Graphics;Science;Education;
+EOL
 
 # Copy the desktop file to the applications directory
 echo "Copying shortcut to applications directory..."
-cp "$SCRIPT_DIR/FaceRecognition.desktop" ~/.local/share/applications/
+mkdir -p "$HOME_DIR/.local/share/applications"
+cp "$SCRIPT_DIR/FaceRecognition.desktop" "$HOME_DIR/.local/share/applications/"
 
 # Update desktop database
 echo "Updating desktop database..."
-update-desktop-database ~/.local/share/applications
+update-desktop-database "$HOME_DIR/.local/share/applications"
 
 # Copy to desktop if requested
 read -p "Do you want to add a shortcut to your desktop? (y/n): " add_to_desktop
 if [[ "$add_to_desktop" == "y" ]]; then
     echo "Adding shortcut to desktop..."
-    cp "$SCRIPT_DIR/FaceRecognition.desktop" ~/Desktop/
+    cp "$SCRIPT_DIR/FaceRecognition.desktop" "$HOME_DIR/Desktop/"
 fi
 
 echo "Installation and shortcut setup completed."
-echo "You can now find 'FaceX-Zoo Recognition' in your applications menu."
 echo "You can now find 'FaceX-Zoo Recognition' in your applications menu."
