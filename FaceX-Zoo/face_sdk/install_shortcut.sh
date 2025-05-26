@@ -1,52 +1,89 @@
 #!/bin/bash
 
-# Script to install the FaceX-Zoo Recognition application shortcuts
+# Script to install the FaceX-Zoo Recognition application with local dependencies
 
-echo "Installing FaceX-Zoo Recognition application shortcuts..."
+echo "============================================"
+echo "Installing FaceX-Zoo Recognition Application"
+echo "============================================"
 
-# Make the main script and Docker script executable
-echo "Making scripts executable..."
-chmod +x "$(dirname "$0")/main.py"
-chmod +x "$(dirname "$0")/run_docker_no_compose.sh"
+# Set script directory
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+cd "$SCRIPT_DIR"
 
-# Copy the desktop files to the applications directory
-echo "Copying shortcuts to applications directory..."
-cp "$(dirname "$0")/FaceRecognition.desktop" ~/.local/share/applications/
-cp "$(dirname "$0")/FaceRecognition-Docker.desktop" ~/.local/share/applications/
+# Check Python version
+python_version=$(python3 --version 2>&1)
+echo "Detected Python: $python_version"
+
+# Check if virtual environment module is available
+if ! python3 -m venv --help &> /dev/null; then
+    echo "Installing Python virtual environment support..."
+    sudo apt-get update
+    sudo apt-get install -y python3-venv
+fi
+
+# Create a virtual environment
+echo "Creating Python virtual environment..."
+python3 -m venv venv
+source venv/bin/activate
+
+# Install required packages
+echo "Installing required Python packages..."
+pip install --upgrade pip
+pip install opencv-python numpy pillow pyyaml matplotlib scikit-image torch torchvision torchaudio
+
+# Install system dependencies for GUI and webcam
+echo "Installing system dependencies..."
+sudo apt-get update
+sudo apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxrender1 \
+    libxext6 \
+    libx11-6 \
+    python3-tk \
+    v4l-utils
+
+# Download Arial font for Polish characters if not present
+if [ ! -f "arial.ttf" ]; then
+    echo "Downloading Arial font..."
+    wget -q -O arial.ttf https://github.com/matomo-org/travis-scripts/raw/master/fonts/Arial.ttf
+fi
+
+# Create directories if they don't exist
+mkdir -p Twarze Logs
+
+# Make the main script executable
+echo "Making main script executable..."
+chmod +x "$SCRIPT_DIR/main.py"
+
+# Create activation script
+cat > "$SCRIPT_DIR/run_app.sh" << EOL
+#!/bin/bash
+cd "$SCRIPT_DIR"
+source venv/bin/activate
+./main.py
+EOL
+chmod +x "$SCRIPT_DIR/run_app.sh"
+
+# Update desktop file to use the activation script
+sed -i "s|Exec=.*|Exec=$SCRIPT_DIR/run_app.sh|g" "$SCRIPT_DIR/FaceRecognition.desktop"
+
+# Copy the desktop file to the applications directory
+echo "Copying shortcut to applications directory..."
+cp "$SCRIPT_DIR/FaceRecognition.desktop" ~/.local/share/applications/
 
 # Update desktop database
 echo "Updating desktop database..."
 update-desktop-database ~/.local/share/applications
 
 # Copy to desktop if requested
-echo "Which shortcut would you like to add to your desktop?"
-echo "1. Standard version (local installation)"
-echo "2. Docker version"
-echo "3. Both versions"
-echo "4. None"
-read -p "Enter your choice (1-4): " choice
+read -p "Do you want to add a shortcut to your desktop? (y/n): " add_to_desktop
+if [[ "$add_to_desktop" == "y" ]]; then
+    echo "Adding shortcut to desktop..."
+    cp "$SCRIPT_DIR/FaceRecognition.desktop" ~/Desktop/
+fi
 
-case $choice in
-    1)
-        echo "Adding standard shortcut to desktop..."
-        cp "$(dirname "$0")/FaceRecognition.desktop" ~/Desktop/
-        ;;
-    2)
-        echo "Adding Docker shortcut to desktop..."
-        cp "$(dirname "$0")/FaceRecognition-Docker.desktop" ~/Desktop/
-        ;;
-    3)
-        echo "Adding both shortcuts to desktop..."
-        cp "$(dirname "$0")/FaceRecognition.desktop" ~/Desktop/
-        cp "$(dirname "$0")/FaceRecognition-Docker.desktop" ~/Desktop/
-        ;;
-    4)
-        echo "No shortcuts will be added to desktop."
-        ;;
-    *)
-        echo "Invalid choice. No shortcuts will be added to desktop."
-        ;;
-esac
-
-echo "Shortcut installation completed."
+echo "Installation and shortcut setup completed."
+echo "You can now find 'FaceX-Zoo Recognition' in your applications menu."
 echo "You can now find 'FaceX-Zoo Recognition' in your applications menu."
