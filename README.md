@@ -1,1 +1,1 @@
-# projekt-z-rozpoznawania-i-przetwarzania-obraz-w
+# Projekt z rozpoznawania i przetwarzania twarzy na bazie FaceX-Zoo
